@@ -1,0 +1,53 @@
+//buildscript中的声明是gradle脚本自身需要使用的资源：https://www.cnblogs.com/qiangxia/p/4826532.html
+buildscript {
+	repositories {
+	    mavenLocal()
+		mavenCentral()
+	}
+	dependencies {
+//		Spring Boot Gradle 插件对Gradle项目提供了Spring Boot支持，实现了将项目打包成可执行jar或war文件，运行Spring Boot应用程序和使用spring-boot-dependencies提供的依赖管理功能。该插件要求使用Gradle 4.0或以上版本
+		classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.21.RELEASE'
+	}
+}
+
+plugins {
+//	此处值原为java,但是该值使得gradle插件不识别providedRuntime和providedCompile
+	id 'war'
+}
+
+apply plugin: 'org.springframework.boot'
+
+group = 'cn.kanyun'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenLocal()
+	mavenCentral()
+}
+
+dependencies {
+//	关于gradle中类似于maven的scope：https://blog.csdn.net/x_iya/article/details/75196149
+	testCompile 'org.springframework.boot:spring-boot-starter-test'
+//	直接使用spring-boot-parent
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '2.1.5.RELEASE', ext: 'pom'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	compile group: 'org.springframework.boot', name: 'spring-boot-devtools'
+	compile("org.springframework.boot:spring-boot-devtools")
+	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+	compile group: 'com.alibaba', name: 'druid', version: '1.1.17'
+//	HSQLDB内存数据库(也可以持久化),类似于H2数据库
+	runtime group: 'org.hsqldb', name: 'hsqldb', version: '2.5.0'
+	compile group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: '3.1.0'
+//	如果jar包/依赖代码 仅在编译的时候需要，但是在运行时不需要依赖,就用providedCompile
+	providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+//	beetl模板引擎
+	compile group: 'com.ibeetl', name: 'beetl', version: '3.0.3.RELEASE'
+	compile group: 'com.alibaba', name: 'fastjson', version: '1.2.58'
+
+
+
+
+}

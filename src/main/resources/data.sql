@@ -1,0 +1,1 @@
+INSERT INTO biz_task (TASK_NAME,CONTENT) VALUES ('定时插入任务','一时负气成今日四海无人对夕阳');

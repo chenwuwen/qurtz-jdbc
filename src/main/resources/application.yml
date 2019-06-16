@@ -1,0 +1,149 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  port: 1314
+  display-name: qurtz-jdbc
+#  应用程序的上下文路径
+  context-path: "/"
+#  dispatchServlet路径
+  servlet-path:
+  error:
+    path: "/500.html"
+
+spring:
+  jpa:
+#    显示sql语句
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  http:
+    encoding:
+      charset: UTF-8
+#  多数据源时,此时换成自定义的名称,而不用datasource
+  datasource:
+#    指定数据源名称,默认为testdb
+    name: datasource
+#    随机生成数据源名称
+    generate-unique-name: false
+#    指定schema要使用的Platform(schema-${platform}.sql)，默认为: all
+    platform: all
+#    JDBC驱动程序的完全限定名，默认从jdbc url中自动探测.
+    driver-class-name: org.hsqldb.jdbc.JDBCDriver
+#    要使用的连接池实现的完全限定名
+#    指定数据库连接池为druid,springboot 2.0 默认连接池就是Hikari了(引用parents后不用专门加依赖),如果使用其他连接池，还是需要添加依赖的
+    type: com.alibaba.druid.pool.DruidDataSource
+#    文件存放位置(同URL) https://blog.csdn.net/jacky1982728/article/details/84924332
+    url: jdbc:hsqldb:file:data/qurtz_jbdc_demo;shutdown=true
+#    数据库用户名密码
+    username: kanyun
+    password: kanyun
+#    指定初始化数据源，是否用data.sql来初始化，默认: true
+    initialize: true
+#    如果在初始化数据库时发生错误，停止
+    continue-on-error: false
+#    建表SQL,默认加载schema*.sql 可以是多个
+    schema: classpath:schema.sql
+#    数据SQL,默认加载data*.sql 可以是多个[HSQL在SQL语句中,其表名不能添加反引号,这一点与Mysql不同]
+    data: classpath:data.sql
+#    执行DML脚本的数据库用户
+    data-username:
+#     执行DML脚本的数据库用户密码
+    data-password:
+#      SQL初始化脚本中的语句分隔符。
+    separator: ;
+#    SQL脚本编码。
+    sql-script-encoding: UTF-8
+#    我们除了可以再application.yml中设置各个starter模块中预定义的配置属性,也可以再配置文件中定义一些我们需要自定义属性,然后在应用中通过@Value注解来加载这些自定义的参数
+#    下面这些不是springboot的配置,而是druid的配置,写在此处是要druid的配置类去读取的
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+#    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+#    配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    filters: stat,wall,log4j
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+
+#  mvc配置
+  mvc:
+    view:
+      prefix: "/"
+      suffix: ".html"
+    date-format: "yyyy-MM-dd HH:mm:ss"
+    async:
+      request-timeout: 600
+    static-path-pattern: "/**"
+    favicon:
+#      是否显示springboot的图标(在浏览器标签页左上角)
+      enabled: false
+
+
+
+mybatis-plus:
+#   如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
+#   如果是放在resource目录 classpath:/mapper/*Mapper.xml
+  mapper-locations:
+#    实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: cn.kanyun.qurtz
+  #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+  id-type: 0
+  #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+  field-strategy: 2
+  #驼峰下划线转换
+  db-column-underline: true
+  #mp2.3+ 全局表前缀 mp_
+  #table-prefix: mp_
+  #刷新mapper 调试神器
+  #refresh-mapper: true
+  #数据库大写下划线转换
+  #capital-mode: true
+  # Sequence序列接口实现类配置(Oracle主键自增的原理是序列)
+#    key-generator: com.baomidou.mybatisplus.incrementer.OracleKeyGenerator
+  #逻辑删除配置（下面3个配置）
+  logic-delete-value: 1
+  logic-not-delete-value: 0
+  sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
+  #自定义填充策略接口实现
+  meta-object-handler: com.baomidou.springboot.MyMetaObjectHandler
+  configuration:
+    # 配置打印sql日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #配置返回数据库(column下划线命名&&返回java实体是驼峰命名)，自动匹配无需as（没开启这个，SQL需要写as： select user_id as userId）
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    #配置JdbcTypeForNull, oracle数据库必须配置
+    jdbc-type-for-null: 'null'
+#    启动时是否检查 MyBatis XML 文件的存在，默认不检查
+  check-config-location: false
+#  通过该属性可指定 MyBatis 的执行器，MyBatis 的执行器总共有三种
+#  ExecutorType.SIMPLE：该执行器类型不做特殊的事情，为每个语句的执行创建一个新的预处理语句（PreparedStatement）
+#  ExecutorType.REUSE：该执行器类型会复用预处理语句（PreparedStatement）
+#  ExecutorType.BATCH：该执行器类型会批量执行所有的更新语句
+  executor-type: simple
+  global-config:
+#   是否控制台 print mybatis-plus 的 LOGO
+    banner: true
+
+
+
+
+logging:
+  level: info
+#  日志文件路径
+  path:
+  pattern:
+#    日志文件格式
+    file:
+#     控制台日志格式
+    console:
+#    SpringBoot内部集成了LogBack所以我们不需要添加任何依赖
+  config: classpath:logback.xml
+
