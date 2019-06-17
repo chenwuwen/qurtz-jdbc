@@ -26,6 +26,7 @@ repositories {
 	mavenCentral()
 }
 
+
 dependencies {
 //	关于gradle中类似于maven的scope：https://blog.csdn.net/x_iya/article/details/75196149
 	testCompile 'org.springframework.boot:spring-boot-starter-test'
@@ -33,7 +34,8 @@ dependencies {
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '2.1.5.RELEASE', ext: 'pom'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
+//	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	compile group: 'org.springframework.boot', name: 'spring-boot-devtools'
 	compile("org.springframework.boot:spring-boot-devtools")
 	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
@@ -42,12 +44,17 @@ dependencies {
 	runtime group: 'org.hsqldb', name: 'hsqldb', version: '2.5.0'
 	compile group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: '3.1.0'
 //	如果jar包/依赖代码 仅在编译的时候需要，但是在运行时不需要依赖,就用providedCompile
-	providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
 //	beetl模板引擎
 	compile group: 'com.ibeetl', name: 'beetl', version: '3.0.3.RELEASE'
 	compile group: 'com.alibaba', name: 'fastjson', version: '1.2.58'
-
-
-
+//	compile group: 'com.alibaba', name: 'druid-spring-boot-starter', version: '1.1.17'
+//	quartz引入(其依赖spring-context-support包,当使用spring-boot-starter-quartz时则不用添加该依赖)
+	compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.1'
+	compile group: 'org.springframework', name: 'spring-context-support', version: '5.1.8.RELEASE'
+//	quartz-starter引入,可以在yml中设置参数,这样的话,在quartz.properties中的配置会被覆盖 ,这个starter依赖需要添加版本号,否则编译不过去,该依赖会与tomcat依赖冲突报错：ClassNotFoundException: javax.servlet.Servlet
+//	compile group: 'org.springframework.boot', name: 'spring-boot-starter-quartz' , version: '2.1.5.RELEASE'
+//	spring-boot-starter-web包里面有hibernate-validator包，不需要引用hibernate validator依赖
+//	compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.17.Final'
 
 }

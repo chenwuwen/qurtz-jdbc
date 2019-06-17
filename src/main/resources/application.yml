@@ -33,7 +33,7 @@ spring:
 #    指定数据库连接池为druid,springboot 2.0 默认连接池就是Hikari了(引用parents后不用专门加依赖),如果使用其他连接池，还是需要添加依赖的
     type: com.alibaba.druid.pool.DruidDataSource
 #    文件存放位置(同URL) https://blog.csdn.net/jacky1982728/article/details/84924332
-    url: jdbc:hsqldb:file:data/qurtz_jbdc_demo;shutdown=true
+    url: jdbc:hsqldb:file:db/qurtz_jbdc_demo;shutdown=true
 #    数据库用户名密码
     username: kanyun
     password: kanyun
@@ -131,6 +131,7 @@ mybatis-plus:
   global-config:
 #   是否控制台 print mybatis-plus 的 LOGO
     banner: true
+
 
 
 

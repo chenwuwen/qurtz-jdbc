@@ -138,7 +138,7 @@ public class DruidDataSourceConfig {
 
 
 
-    @Bean
+    @Bean(name = "dataSource")
     public DataSource druidDataSource() {
         DruidDataSource datasource = new DruidDataSource();
         datasource.setName(name);
