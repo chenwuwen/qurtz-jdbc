@@ -1,4 +1,6 @@
+//gradle的解析顺序：rootproject 的setting.gradle,然后是rootproject的build.gradle,然后是各个subproject。所以project下的build.gradle会先于app下的build.gradle。
 //buildscript中的声明是gradle脚本自身需要使用的资源：https://www.cnblogs.com/qiangxia/p/4826532.html
+//使用gradlew命令时,提示找不到主类,原因是因为gradle-wrapper.jar文件不存在,使用gradle wrapper 命令生成 gradle-wrapper.jar文件
 buildscript {
 	repositories {
 	    mavenLocal()
@@ -26,6 +28,57 @@ repositories {
 	mavenCentral()
 }
 
+//task有两个生命周期，配置阶段和执行阶段。
+//gradle在执行task时，都会先对task进行配置，task中最顶层的代码就是配置代码，在配置阶段执行，其他代码实在执行阶段执行的；
+//task关键字实际上是一个方法调用，我们不用将参数放在括号里面
+// “<<”语法糖，表示追加执行过程，相当于doLast
+task printVariable(){
+		println("========开始打印Gradle中的变量========")
+		println("buildDir:"+"$buildDir/")
+		println("projectDir:"+"$projectDir/")
+		println("rootDir:"+"$rootDir/")
+
+}
+
+
+
+task beginBuild(){
+//	dependsOn 'endBuild'
+	println("========开始构建========")
+
+}
+
+task endBuild(){
+	dependsOn 'beginBuild'
+	println("========构建结束========")
+}
+
+
+
+//在所有build.gradle解析完成后，开始执行task之前，此时所有的脚本已经解析完成，task，plugins等所有信息可以获取，task的依赖关系也已经生成，如果此时需要做一些事情，可以写在afterEvaluate
+project.afterEvaluate{
+	println "this.project.afterEvaluate"
+}
+
+project.beforeEvaluate{
+	println "this.project.afterEvaluate111"
+}
+
+task copyWebSource(type: org.gradle.api.tasks.Copy){
+	println("===移动静态资源文件===")
+//	从哪里取文件
+	from ("$projectDir/src/main/webapp")
+//	去掉哪些文件或者目录,（以ui，uuid，M开头的目录和文件）
+//	exclude('ui', 'uuid', 'M')
+//	包含哪些文件
+//	include()
+//	放到哪个目录
+	into ("$buildDir/")
+}
+
+//指定任务间依赖
+//endBuild.dependsOn(beginBuild)
+endBuild.mustRunAfter(war)
 
 dependencies {
 //	关于gradle中类似于maven的scope：https://blog.csdn.net/x_iya/article/details/75196149
@@ -42,9 +95,10 @@ dependencies {
 	compile group: 'com.alibaba', name: 'druid', version: '1.1.17'
 //	HSQLDB内存数据库(也可以持久化),类似于H2数据库
 	runtime group: 'org.hsqldb', name: 'hsqldb', version: '2.5.0'
+	compile group: 'com.google.guava', name: 'guava', version: '28.0-jre'
 	compile group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: '3.1.0'
 //	如果jar包/依赖代码 仅在编译的时候需要，但是在运行时不需要依赖,就用providedCompile
-	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+	providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
 //	beetl模板引擎
 	compile group: 'com.ibeetl', name: 'beetl', version: '3.0.3.RELEASE'
 	compile group: 'com.alibaba', name: 'fastjson', version: '1.2.58'

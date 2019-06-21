@@ -5,8 +5,10 @@ import cn.kanyun.qurtzjdbc.entity.JobEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
+import org.quartz.simpl.SimpleThreadPool;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class QuartzServiceImpl implements QuartzService {
      * Scheduler作为Quartz的核心调度器，有将近50多个API接口，包括任务的添加，暂停，恢复，删除等一系列的API
      */
     @Autowired
+    @Qualifier("scheduler")
     private Scheduler scheduler;
 
     @Override

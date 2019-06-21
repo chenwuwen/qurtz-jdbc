@@ -72,11 +72,18 @@ spring:
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 
+#    关闭默认模板引擎
+  thymeleaf:
+    enabled: false
+    cache: false
+
+
 #  mvc配置
   mvc:
     view:
       prefix: "/"
       suffix: ".html"
+    locale: zh_CN
     date-format: "yyyy-MM-dd HH:mm:ss"
     async:
       request-timeout: 600
@@ -84,7 +91,6 @@ spring:
     favicon:
 #      是否显示springboot的图标(在浏览器标签页左上角)
       enabled: false
-
 
 
 mybatis-plus:
@@ -135,7 +141,6 @@ mybatis-plus:
 
 
 
-
 logging:
   level: info
 #  日志文件路径
@@ -147,4 +152,6 @@ logging:
     console:
 #    SpringBoot内部集成了LogBack所以我们不需要添加任何依赖
   config: classpath:logback.xml
+#  在日志系统初始化时为其注册一个关闭挂钩。
+  register-shutdown-hook: true
 
