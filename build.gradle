@@ -1,20 +1,20 @@
 //gradle的解析顺序：rootproject 的setting.gradle,然后是rootproject的build.gradle,然后是各个subproject。所以project下的build.gradle会先于app下的build.gradle。
 //buildscript中的声明是gradle脚本自身需要使用的资源：https://www.cnblogs.com/qiangxia/p/4826532.html
-//使用gradlew命令时,提示找不到主类,原因是因为gradle-wrapper.jar文件不存在,使用gradle wrapper 命令生成 gradle-wrapper.jar文件
+//使用gradlew命令时,提示找不到主类,原因是因为gradle-wrapper.jar文件不存在,使用gradle wrapper 命令生成 gradle-wrapper.jar文件,需要注意的是该命令也同时会更新gradle-wrapper.properties文件
 buildscript {
-	repositories {
-	    mavenLocal()
-		mavenCentral()
-	}
-	dependencies {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
 //		Spring Boot Gradle 插件对Gradle项目提供了Spring Boot支持，实现了将项目打包成可执行jar或war文件，运行Spring Boot应用程序和使用spring-boot-dependencies提供的依赖管理功能。该插件要求使用Gradle 4.0或以上版本
-		classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.21.RELEASE'
-	}
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.21.RELEASE'
+    }
 }
 
 plugins {
 //	此处值原为java,但是该值使得gradle插件不识别providedRuntime和providedCompile
-	id 'war'
+    id 'war'
 }
 
 apply plugin: 'org.springframework.boot'
@@ -22,58 +22,68 @@ apply plugin: 'org.springframework.boot'
 group = 'cn.kanyun'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
-
+logger.info("这是gradle的log")
 repositories {
     mavenLocal()
-	mavenCentral()
+    mavenCentral()
 }
 
-//task有两个生命周期，配置阶段和执行阶段。
-//gradle在执行task时，都会先对task进行配置，task中最顶层的代码就是配置代码，在配置阶段执行，其他代码实在执行阶段执行的；
+//task有两个生命周期，配置阶段和执行阶段。配置阶段的代码只要在执行任何task都会跟着执行，如果我们希望不被执行的话，就只能放到执行阶段了，最直接的方法就是加到doLast、doFirst里
+//gradle在执行task时，都会先对task进行配置，task中最顶层的代码就是配置代码，在配置阶段执行，其他代码是在执行阶段执行的；
 //task关键字实际上是一个方法调用，我们不用将参数放在括号里面
-// “<<”语法糖，表示追加执行过程，相当于doLast
-task printVariable(){
-		println("========开始打印Gradle中的变量========")
-		println("buildDir:"+"$buildDir/")
-		println("projectDir:"+"$projectDir/")
-		println("rootDir:"+"$rootDir/")
-
+// “<<”语法糖，表示追加执行过程，相当于doLast 但是在gradle 在5.1 之后废弃了
+task testLifeCycle() {
+    println "执行任何任务都会打印这段话,这是因为这段话在Task中的最顶层,是配置代码,如果需要在真正执行时执行该Task则应该写在doLast、doFirst里"
 }
 
 
 
-task beginBuild(){
+
+
+task beginBuild() {
 //	dependsOn 'endBuild'
-	println("========开始构建========")
-
+    doFirst {
+        println("========开始构建========")
+    }
 }
 
-task endBuild(){
-	dependsOn 'beginBuild'
-	println("========构建结束========")
+task endBuild() {
+    dependsOn 'beginBuild'
+    doLast {
+        println("========构建结束========")
+    }
 }
 
-
+task printVariable() {
+    doLast {
+        println("========开始打印Gradle中的变量========")
+        println("buildDir:" + "$buildDir/")
+        println("projectDir:" + "$projectDir/")
+        println("rootDir:" + "$rootDir/")
+    }
+}
 
 //在所有build.gradle解析完成后，开始执行task之前，此时所有的脚本已经解析完成，task，plugins等所有信息可以获取，task的依赖关系也已经生成，如果此时需要做一些事情，可以写在afterEvaluate
-project.afterEvaluate{
-	println "this.project.afterEvaluate"
+project.afterEvaluate {
+    println "this.project.afterEvaluate"
 }
 
-project.beforeEvaluate{
-	println "this.project.afterEvaluate111"
+project.beforeEvaluate {
+    println "this.project.afterEvaluate111"
 }
 
-task copyWebSource(type: org.gradle.api.tasks.Copy){
-	println("===移动静态资源文件===")
+task copyWebSource(type: org.gradle.api.tasks.Copy) {
+    doLast {
+        println("===移动静态资源文件===")
 //	从哪里取文件
-	from ("$projectDir/src/main/webapp")
+        from("$projectDir/src/main/webapp")
 //	去掉哪些文件或者目录,（以ui，uuid，M开头的目录和文件）
 //	exclude('ui', 'uuid', 'M')
 //	包含哪些文件
 //	include()
 //	放到哪个目录
-	into ("$buildDir/")
+        into("$buildDir/")
+    }
 }
 
 //指定任务间依赖
@@ -82,30 +92,31 @@ endBuild.mustRunAfter(war)
 
 dependencies {
 //	关于gradle中类似于maven的scope：https://blog.csdn.net/x_iya/article/details/75196149
-	testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
 //	直接使用spring-boot-parent
-	compile group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '2.1.5.RELEASE', ext: 'pom'
-	compile group: 'org.springframework.boot', name: 'spring-boot-starter'
-	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
-	compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '2.1.5.RELEASE', ext: 'pom'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
 //	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-	compile group: 'org.springframework.boot', name: 'spring-boot-devtools'
-	compile("org.springframework.boot:spring-boot-devtools")
-	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-	compile group: 'com.alibaba', name: 'druid', version: '1.1.17'
+    compile group: 'org.springframework.boot', name: 'spring-boot-devtools'
+    compile("org.springframework.boot:spring-boot-devtools")
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    compile group: 'com.alibaba', name: 'druid', version: '1.1.17'
 //	HSQLDB内存数据库(也可以持久化),类似于H2数据库
-	runtime group: 'org.hsqldb', name: 'hsqldb', version: '2.5.0'
-	compile group: 'com.google.guava', name: 'guava', version: '28.0-jre'
-	compile group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: '3.1.0'
+    runtime group: 'org.hsqldb', name: 'hsqldb', version: '2.5.0'
+    compile group: 'com.google.guava', name: 'guava', version: '28.0-jre'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    compile group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: '3.1.0'
 //	如果jar包/依赖代码 仅在编译的时候需要，但是在运行时不需要依赖,就用providedCompile
-	providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+    providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
 //	beetl模板引擎
-	compile group: 'com.ibeetl', name: 'beetl', version: '3.0.3.RELEASE'
-	compile group: 'com.alibaba', name: 'fastjson', version: '1.2.58'
+    compile group: 'com.ibeetl', name: 'beetl', version: '3.0.3.RELEASE'
+    compile group: 'com.alibaba', name: 'fastjson', version: '1.2.58'
 //	compile group: 'com.alibaba', name: 'druid-spring-boot-starter', version: '1.1.17'
 //	quartz引入(其依赖spring-context-support包,当使用spring-boot-starter-quartz时则不用添加该依赖)
-	compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.1'
-	compile group: 'org.springframework', name: 'spring-context-support', version: '5.1.8.RELEASE'
+    compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.1'
+    compile group: 'org.springframework', name: 'spring-context-support', version: '5.1.8.RELEASE'
 //	quartz-starter引入,可以在yml中设置参数,这样的话,在quartz.properties中的配置会被覆盖 ,这个starter依赖需要添加版本号,否则编译不过去,该依赖会与tomcat依赖冲突报错：ClassNotFoundException: javax.servlet.Servlet
 //	compile group: 'org.springframework.boot', name: 'spring-boot-starter-quartz' , version: '2.1.5.RELEASE'
 //	spring-boot-starter-web包里面有hibernate-validator包，不需要引用hibernate validator依赖
