@@ -1,90 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<configuration  scan="true" scanPeriod="10 seconds">
 
-<!-- scan="true"开启对配置信息的自动扫描(默认时间为60秒扫描一次) 注:当此文件的配置信息发生变化时,此设置的作用就体现出来了,不需要重启服务 -->
-<configuration scan="true">
+    <contextName>logback</contextName>
 
     <!-- 通过property标签,来存放key-value数据,便于后面的动态获取,提高程序的灵活性 -->
     <property name="log-dir" value="log" />
-    <property name="log-name" value="logFile" />
+    <property name="log-name" value="qurtz_jdbc" />
+    <!-- 彩色日志 -->
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+    <!-- 彩色日志格式 -->
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
 
-    <!-- >>>>>>>>>>>>>>>>>>>>>>>>>配置appender(可以配置多个)>>>>>>>>>>>>>>>>>>>>>>>>> -->
-    <!--
-        name:自取即可,
-        class:加载指定类(ch.qos.logback.core.ConsoleAppender类会将日志输出到>>>控制台),
-        patter:指定输出的日志格式
-    -->
-    <appender name="consoleAppender"
-              class="ch.qos.logback.core.ConsoleAppender">
+    <!-- 格式化输出：%date表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符-->
+    <property name="LOG_PATTERN" value="%date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
+
+    <!-- 定义日志存储的路径 -->
+    <property name="FILE_PATH" value="${log-dir}/${log-name}.%d{yyyy-MM-dd}.%i.log" />
+
+    <!-- 控制台输出日志 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 日志级别过滤INFO以下 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L- %msg%n</pattern>
-            <!-- 日志编码 -->
-            <charset class="java.nio.charset.Charset">UTF-8</charset>
+            <!-- 按照上面配置的LOG_PATTERN来打印日志 -->
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
-    <!--
-        name:自取即可,
-        class:加载指定类(ch.qos.logback.core.rolling.RollingFileAppender类会将日志输出到>>>指定的文件中),
-        patter:指定输出的日志格式 file:指定存放日志的文件(如果无,则自动创建) rollingPolicy:滚动策略>>>每天结束时，都会将该天的日志存为指定的格式的文件
-        FileNamePattern：文件的全路径名模板 (注:如果最后结尾是gz或者zip等的话,那么会自动打成相应压缩包)
-    -->
-    <appender name="fileAppender"
-              class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!-- 把日志文件输出到:项目启动的目录下的log文件夹(无则自动创建)下 -->
-        <file>${log-dir}/${log-name}.log</file>
-        <!-- 把日志文件输出到:name为logFilePositionDir的property标签指定的位置下 -->
-        <!-- <file>${logFilePositionDir}/logFile.log</file> -->
-        <!-- 把日志文件输出到:当前磁盘下的log文件夹(无则自动创建)下 -->
-        <!-- <file>/log/logFile.log</file> -->
-        <rollingPolicy
-                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- TimeBasedRollingPolicy策略会将过时的日志，另存到指定的文件中(无该文件则创建) -->
-            <!-- 把因为 过时 或 过大  而拆分后的文件也保存到目启动的目录下的log文件夹下  -->
-            <fileNamePattern>${log-dir}/${log-name}.%d{yyyy-MM-dd}.%i.log
-            </fileNamePattern>
-            <!-- 设置过时时间(单位:<fileNamePattern>标签中%d里最小的时间单位) -->
-            <!-- 系统会删除(分离出去了的)过时了的日志文件 -->
-            <!-- 本人这里:保存以最后一次日志为准,往前7天以内的日志文件 -->
-            <MaxHistory>
-                7
-            </MaxHistory>
-            <!-- 滚动策略可以嵌套；
-                     这里嵌套了一个SizeAndTimeBasedFNATP策略，
-                        主要目的是: 在每天都会拆分日志的前提下，
-                        当该天的日志大于规定大小时，
-                        也进行拆分并以【%i】进行区分，i从0开始
-            -->
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>5MB</maxFileSize>
+    <!--每天生成一个日志文件，保存30天的日志文件。rollingFile用来切分文件的 -->
+    <appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+
+            <fileNamePattern>${FILE_PATH}</fileNamePattern>
+
+            <!-- keep 15 days' worth of history -->
+            <maxHistory>30</maxHistory>
+
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- 日志文件的最大大小 -->
+                <maxFileSize>2MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- 超出删除老文件 -->
+            <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
+
         <encoder>
-            <!-- 日志输出格式 -->
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L- %msg%n</pattern>
-            <!-- 日志编码 -->
-            <charset class="java.nio.charset.Charset">UTF-8</charset>
+            <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
-    <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>使用appender>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-    <!--
-        指定[哪个包]下使用[哪个appender],并设置 记录到日志文件中的日志的最下
-        级别(低于次级别的日志信息不回输出记录到日志文件中)
-        注:日志级别有: trace|debug|info|warn|error|fatal
-        注:当有多处指定了要记录的日志的最下日志级别时，走优先级最高的，优先级:
-           logback-spring.xml中 > 启动jar包时 > xxx.properties/xxx.yml中
-    -->
-    <!--<logger name="com" level="trace">-->
-    <logger name="cn">
-        <!-- 指定使用哪个appender -->
-        <appender-ref ref="fileAppender" />
-    </logger>
-    <!--
-        root:logger的根节点,appender-ref:确定使用哪个appender,将日志信息显示在console
-        注:如果不指定配置此项的话,那么SpringBoot启动后,将不会在console打印任何信息
-    -->
-    <root Level="info">
-        <appender-ref ref="consoleAppender" />
+
+    <!-- 开发、测试环境 -->
+<!--    <springProfile name="dev,test">-->
+<!--        <logger name="cn.kanyun.qurtzjdbc" level="INFO"/>-->
+<!--        <logger name="com.baomidou" level="DEBUG" />-->
+<!--    </springProfile>-->
+
+    <!-- 生产环境 -->
+<!--    <springProfile name="pro">-->
+<!--        <logger name="cn.kanyun.qurtzjdbc" level="ERROR"/>-->
+<!--        <logger name="com.baomidou" level="DEBUG" />-->
+<!--    </springProfile>-->
+
+    <!-- 日志输出级别 -->
+    <root level="INFO">
+        <appender-ref ref="console" />
+        <appender-ref ref="rollingFile" />
     </root>
 </configuration>

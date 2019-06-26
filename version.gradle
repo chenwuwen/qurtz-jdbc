@@ -1,0 +1,9 @@
+//ext是自定义属性，现在很多人都喜欢把所有关于版本的信息都利用ext放在另一个自己新建的gradle文件中集中管理
+//使用时 在版本后面version：rootProject.dependentVersion.easypoiVersion 
+//rootProject 可以不加, 变量也不能加引号 和 ${}
+ext{
+    dependentVersion=[
+            easypoiVersion : '4.1.0'
+
+    ]
+}

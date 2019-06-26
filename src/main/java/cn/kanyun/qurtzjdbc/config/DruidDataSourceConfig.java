@@ -199,9 +199,12 @@ public class DruidDataSourceConfig {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new WebStatFilter());
 //        统计哪些URI
         filterRegistrationBean.addInitParameter("urlPatterns", "/*");
-//        排除统计干扰
+//        排除统计干扰 添加不需要忽略的格式信息.
         filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*");
         filterRegistrationBean.addInitParameter("profileEnable", "true");
+//        用于session监控页面的用户名显示 需要登录后主动将username注入到session里
+        filterRegistrationBean.addInitParameter("principalSessionName", "username");
+//        添加过滤规则
         filterRegistrationBean.addUrlPatterns("/*");
         return filterRegistrationBean;
 

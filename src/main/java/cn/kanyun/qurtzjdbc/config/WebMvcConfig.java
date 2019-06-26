@@ -48,9 +48,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     }
 
+    /**
+     * 自定义静态资源映射
+     * @param configurer
+     */
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-
+        configurer.enable();
     }
 
     @Override
@@ -71,7 +75,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("webapp");
+        //swagger
+        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+//        指到 webapp 目录下
+//        registry.addResourceHandler("/webapp/**").addResourceLocations("/webapp/");
     }
 
     /**

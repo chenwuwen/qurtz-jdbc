@@ -1,8 +1,10 @@
 package cn.kanyun.qurtzjdbc.entity;
 
 /**
- * Created by HLWK-06 on 2019/6/21.
+ *
+ * @author Kanyun
+ * @date 2019/6/21
  */
-public class ConStant {
+public class Constant {
     public static final String uploadFilePath = "/upload";
 }

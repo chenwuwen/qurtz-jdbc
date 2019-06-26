@@ -14,7 +14,7 @@ import java.lang.reflect.Type;
 
 /**
  * 反射工具类.
- *
+ * <p>
  * 提供调用getter/setter方法, 访问私有变量, 调用私有方法, 获取泛型类型Class, 被AOP过的真实类等工具函数.
  *
  * @author calvin
@@ -31,16 +31,15 @@ public class Reflections {
      */
     public static Object invokeGetter(Object obj, String propertyName) {
         String getterMethodName = GETTER_PREFIX + StringUtils.capitalize(propertyName);
-        return invokeMethod(obj, getterMethodName, new Class[] {}, new Object[] {});
+        return invokeMethod(obj, getterMethodName, new Class[]{}, new Object[]{});
     }
 
     /**
      * 调用Setter方法, 仅匹配方法名。
-     *
      */
     public static void invokeSetter(Object obj, String propertyName, Object value) {
         String setterMethodName = SETTER_PREFIX + StringUtils.capitalize(propertyName);
-        invokeMethodByName(obj, setterMethodName, new Object[] { value });
+        invokeMethodByName(obj, setterMethodName, new Object[]{value});
     }
 
     /**
@@ -118,7 +117,7 @@ public class Reflections {
 
     /**
      * 循环向上转型, 获取对象的DeclaredField, 并强制设置为可访问.
-     *
+     * <p>
      * 如向上转型到Object仍无法找到, 返回null.
      */
     public static Field getAccessibleField(final Object obj, final String fieldName) {
@@ -140,7 +139,7 @@ public class Reflections {
      * 循环向上转型, 获取对象的DeclaredMethod,并强制设置为可访问.
      * 如向上转型到Object仍无法找到, 返回null.
      * 匹配函数名+参数类型。
-     *
+     * <p>
      * 用于方法需要被多次调用的情况. 先使用本函数先取得Method,然后调用Method.invoke(Object obj, Object... args)
      */
     public static Method getAccessibleMethod(final Object obj, final String methodName,
@@ -164,7 +163,7 @@ public class Reflections {
      * 循环向上转型, 获取对象的DeclaredMethod,并强制设置为可访问.
      * 如向上转型到Object仍无法找到, 返回null.
      * 只匹配函数名。
-     *
+     * <p>
      * 用于方法需要被多次调用的情况. 先使用本函数先取得Method,然后调用Method.invoke(Object obj, Object... args)
      */
     public static Method getAccessibleMethodByName(final Object obj, final String methodName) {
@@ -187,18 +186,21 @@ public class Reflections {
      * 改变private/protected的方法为public，尽量不调用实际改动的语句，避免JDK的SecurityManager抱怨。
      */
     public static void makeAccessible(Method method) {
-        if ((!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method.getDeclaringClass().getModifiers()))
-                && !method.isAccessible()) {
+        boolean status = (!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method.getDeclaringClass().getModifiers()))
+                && !method.isAccessible();
+        if (status) {
             method.setAccessible(true);
         }
     }
+
 
     /**
      * 改变private/protected的成员变量为public，尽量不调用实际改动的语句，避免JDK的SecurityManager抱怨。
      */
     public static void makeAccessible(Field field) {
-        if ((!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers()) || Modifier
-                .isFinal(field.getModifiers())) && !field.isAccessible()) {
+        boolean status = (!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers()) || Modifier
+                .isFinal(field.getModifiers())) && !field.isAccessible();
+        if (status) {
             field.setAccessible(true);
         }
     }
@@ -219,7 +221,7 @@ public class Reflections {
     /**
      * 通过反射, 获得Class定义中声明的父类的泛型参数的类型.
      * 如无法找到, 返回Object.class.
-     *
+     * <p>
      * 如public UserDao extends HibernateDao<User,Long>
      *
      * @param clazz clazz The class to introspect

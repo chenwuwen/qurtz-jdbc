@@ -1,9 +1,9 @@
 package cn.kanyun.qurtzjdbc.controller;
 
-import cn.kanyun.qurtzjdbc.entity.ConStant;
+
+import cn.kanyun.qurtzjdbc.entity.Constant;
 import cn.kanyun.qurtzjdbc.entity.Result;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +37,7 @@ public class FileController {
             return result;
         }
         String fileName = file.getOriginalFilename();
-        File dest = new File(ConStant.uploadFilePath + fileName);
+        File dest = new File(Constant.uploadFilePath + fileName);
         try {
             file.transferTo(dest);
             result.setMsg("上传成功");

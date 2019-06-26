@@ -1,13 +1,19 @@
 //gradle的解析顺序：rootproject 的setting.gradle,然后是rootproject的build.gradle,然后是各个subproject。所以project下的build.gradle会先于app下的build.gradle。
 //buildscript中的声明是gradle脚本自身需要使用的资源：https://www.cnblogs.com/qiangxia/p/4826532.html
 //使用gradlew命令时,提示找不到主类,原因是因为gradle-wrapper.jar文件不存在,使用gradle wrapper 命令生成 gradle-wrapper.jar文件,需要注意的是该命令也同时会更新gradle-wrapper.properties文件
+
 buildscript {
     repositories {
         mavenLocal()
         mavenCentral()
+        jcenter()
+        maven { url "https://repository.sonatype.org/content/groups/forge/" }
+        maven { url "http://repository.jboss.org/nexus/content/groups/public/" }
+        maven { url "http://maven.springframework.org/release/" }
     }
     dependencies {
 //		Spring Boot Gradle 插件对Gradle项目提供了Spring Boot支持，实现了将项目打包成可执行jar或war文件，运行Spring Boot应用程序和使用spring-boot-dependencies提供的依赖管理功能。该插件要求使用Gradle 4.0或以上版本
+//      同时该插件提供了一个bootRun的任务,可以通过gradlew bootRun 来启动项目
         classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.21.RELEASE'
     }
 }
@@ -17,16 +23,63 @@ plugins {
     id 'war'
 }
 
+//apply plugin：'×××'：叫做二进制插件，二进制插件一般都是被打包在一个jar里独立发布的，比如我们自定义的插件，
+// 在发布的时候我们也可以为其指定plugin id，这个plugin id最好是一个全限定名称，就像你的包名一样
 apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+//apply plugin: 'war'
+apply plugin: 'java'
+//加载Intellij IDEA插件。如果运行任务“Gradle Idea”，它将为您创建Intellij项目文件
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+//apply from：'xxx'：叫做应用脚本插件，其实这不能算一个插件，它只是一个脚本。应用脚本插件，其实就是把这个脚本加载进来，
+// 和二进制插件不同的是它使用的是from关键字.后面紧跟的坫一个脚本文件，可以是本地的，也可以是网络存在的，
+// 如果是网络上的话要使用HTTP URL.虽然它不是一个真正的插件，但是不能忽视它的作用.它是脚本文件模块化的基础，
+// 我们可以把庞大的脚本文件.进行分块、分段整理.拆分成一个个共用、职责分明的文件，然后使用apply from来引用它们，
+// 比如我们可以把常用的函数放在一个Utils.gradle脚本里，供其他脚本文件引用。
+// 示例中我们把 App的版本名称和版本号单独放在一个脚本文件里，清晰、简单、方便、快捷.我们也可以使用自动化对该文件自动处理，生成版本。
+apply from: 'version.gradle'
 
 group = 'cn.kanyun'
-version = '0.0.1-SNAPSHOT'
+//也可以不写，默认继承父模块 version
+//version = '${rootProject.version}'
+//java编译版本
 sourceCompatibility = '1.8'
+//归档名称
+archivesBaseName = 'qurtz_jdbc'
+//指定 Jar 启动 Main
+//mainClassName = "cn.kanyun.qurtzjdbc.QurtzJdbcApplication"
+//默认情况下,编译完成会生成到/目录
+buildDir = new File(rootProject.projectDir, "target/")
+
+
 logger.info("这是gradle的log")
+
+
+/**
+ * SourceSets被称作原集合，一般可以用它来指定资源的路径,也就是说编译的时候,把哪些文件编译到一块
+ * 其实对于本项目而言最主要的是讲webapp识别为resources而不是静态模板
+ * https://www.jianshu.com/p/3f59d62f9f62
+ */
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources"
+            srcDirs "src/main/webapp"
+        }
+    }
+}
+
 repositories {
     mavenLocal()
     mavenCentral()
+    jcenter()
+    maven { url "https://repository.sonatype.org/content/groups/forge/" }
+    maven { url "http://repository.jboss.org/nexus/content/groups/public/" }
+    maven { url "http://maven.springframework.org/release/" }
 }
+
 
 //task有两个生命周期，配置阶段和执行阶段。配置阶段的代码只要在执行任何task都会跟着执行，如果我们希望不被执行的话，就只能放到执行阶段了，最直接的方法就是加到doLast、doFirst里
 //gradle在执行task时，都会先对task进行配置，task中最顶层的代码就是配置代码，在配置阶段执行，其他代码是在执行阶段执行的；
@@ -35,9 +88,6 @@ repositories {
 task testLifeCycle() {
     println "执行任何任务都会打印这段话,这是因为这段话在Task中的最顶层,是配置代码,如果需要在真正执行时执行该Task则应该写在doLast、doFirst里"
 }
-
-
-
 
 
 task beginBuild() {
@@ -60,6 +110,11 @@ task printVariable() {
         println("buildDir:" + "$buildDir/")
         println("projectDir:" + "$projectDir/")
         println("rootDir:" + "$rootDir/")
+        println("rootProject:" + "$rootProject/")
+        println("rootProject:" + getRootProject())
+        println("webAppDir:" + "$webAppDir")
+        println("webAppDir:" + getWebAppDir())
+        println("webAppDirName是相对路径:" + "$webAppDirName")
     }
 }
 
@@ -72,46 +127,105 @@ project.beforeEvaluate {
     println "this.project.afterEvaluate111"
 }
 
+/**
+ * 一开始我想的是bootRun Task运行前将webapp中的文件复制到target目录,以便Beetl来解析(也不仅限于Beetl,
+ * 因为springboot默认把resources文件夹当做静态资源目录,所以不管是Thymeleaf/Velocity/Freemarker 来说,springboot
+ * 都是同等对待的,默认模板文件就在resources/templates下),经过实践发现这并不能很好解决问题,但是就个人而言,开发web
+ * 项目还是希望模板文件跟配置文件在开发中互相隔离,这也算是一种代码洁癖吧,既然这种方式行不通,而且用的也不是maven
+ * 然后就找到了更好的实现手段,那就是gradle的sourceSet,通过sourceSet可以把多个路径的内容在编译时放在一块
+ * 其实就是定义一个类别,然后把属于这个类别的内容写在一块,这样就不受文件路径限制了
+ */
 task copyWebSource(type: org.gradle.api.tasks.Copy) {
-    doLast {
-        println("===移动静态资源文件===")
-//	从哪里取文件
-        from("$projectDir/src/main/webapp")
+//    使用description添加任务说明。执行gradle任务时会显示此说明
+    description '拷贝静态资源到构建后的目录中'
+//    需要注意的是复制任务不能写在doLast或doFirst块中,否则复制任务不执行,当执行其他任务时,只要不关联复制任务,那么复制任务不会执行,但既不在doLast或doFirst块中的,又跟服务任务无关的代码,在执行其他任务时还是会被执行
+
+    println "这条打印语句是copy任务中的语句,在copy任务中的关于copy的代码,执行其他任务不会执行,否则如果代码与copy代码无关且不再doFirst/doLast块中,则执行其他任务时会执行"
+//	from() 方法接收任何 files() 方法支持的参数.
+//	当参数被解析为一个目录时,在这个目录下的任何文件都会被递归地复制到目标目录(但不是目录本身).
+//	当一个参数解析为一个文件时,该文件被复制到目标目录中.当参数被解析为一个不存在的文件时,这个参数就会忽略.
+//	如果这个参数是一个任务,任务的输出文件(这个任务创建的文件)会被复制,然后这个任务会被自动添加为复制任务的依赖.
+    from "${webAppDir}"
+//        delete
 //	去掉哪些文件或者目录,（以ui，uuid，M开头的目录和文件）
 //	exclude('ui', 'uuid', 'M')
 //	包含哪些文件
-//	include()
+//        include('**/*.html', '**/*.css', '**/*.js', '**/*.image', '**/*.png')
 //	放到哪个目录
-        into("$buildDir/")
+    into "${buildDir}/resources"
+
+    doLast {
+        println "doLast()   Executes after the copy: file contents; ${fileTree(buildDir).files}"
     }
+
+    doFirst {
+        println("===复制静态资源文件===")
+        println "doFirst()  Executes before copy, file contents: ${fileTree(buildDir).files}"
+    }
+
+    eachFile {
+//        println "eachFile() This is a DSL method on the copy task to allow processing on files as they're copied. Copying ${it} ..."
+        println "=======静态文件复制完成========="
+    }
+
 }
 
 //指定任务间依赖
 //endBuild.dependsOn(beginBuild)
+//bootRun.dependsOn(copyWebSource)
 endBuild.mustRunAfter(war)
+
+dependencyManagement{
+    imports {
+//        mavenBom 'org.springframework.boot:spring-boot-starter-parent:2.1.5.RELEASE'
+    }
+}
 
 dependencies {
 //	关于gradle中类似于maven的scope：https://blog.csdn.net/x_iya/article/details/75196149
     testCompile 'org.springframework.boot:spring-boot-starter-test'
-//	直接使用spring-boot-parent
+//	直接使用spring-boot-parent  https://blog.csdn.net/hffyyg/article/details/86522130
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '2.1.5.RELEASE', ext: 'pom'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
+//    如果要将最终的打包形式改为war的话，还需要对pom.xml文件进行修改，因为spring-boot-starter-web中包含内嵌的tomcat容器，所以直接部署在外部容器会冲突报错
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', {
+        exclude group: 'spring-boot-starter-tomcat'
+    }
+
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
-//	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+//    springboot默认使用yml中的配置，但有时候要用传统的xml或properties配置，就需要使用spring-boot-configuration-processor，再在配置类开头加上@PropertySource("classpath:your.properties")，其余用法与加载yml的配置
+    compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', {
+//        transitive参数跟maven的optional的效果一直,都是解决依赖是否传递,https://blog.csdn.net/m0_37450089/article/details/85256596
+        transitive = true
+    }
+//    Tomcat对 JSP的支持
+    providedRuntime group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.21'
     compile group: 'org.springframework.boot', name: 'spring-boot-devtools'
+//    该依赖可实现分布式session,一旦配置完成即可像单机下使用session一样使用分布式session
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis'
     compile("org.springframework.boot:spring-boot-devtools")
+
+//    swagger相关 配置
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    compile group: 'io.swagger', name: 'swagger-annotations', version: '1.5.22'
+
+//    验证码
+    compile group: 'com.github.penggle', name: 'kaptcha', version: '2.3.2'
     compile group: 'com.alibaba', name: 'druid', version: '1.1.17'
 //	HSQLDB内存数据库(也可以持久化),类似于H2数据库
     runtime group: 'org.hsqldb', name: 'hsqldb', version: '2.5.0'
     compile group: 'com.google.guava', name: 'guava', version: '28.0-jre'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
     compile group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: '3.1.0'
+//    gradle5使用lombok加如下两条命令
 //	如果jar包/依赖代码 仅在编译的时候需要，但是在运行时不需要依赖,就用providedCompile
     providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+//    AnnotationProcessor 就是注解编译，通过它，我们可以在编译阶段拿到注解对象（类、属性、方法等）的属性、注解值。我们常用的做法是把拿到的元素包装下，写成一个Java类。然后在业务代码里使用反射、实例化得对该java类进行操作。
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
 //	beetl模板引擎
-    compile group: 'com.ibeetl', name: 'beetl', version: '3.0.3.RELEASE'
+    compile group: 'com.ibeetl', name: 'beetl', version: '3.0.6.RELEASE'
     compile group: 'com.alibaba', name: 'fastjson', version: '1.2.58'
 //	compile group: 'com.alibaba', name: 'druid-spring-boot-starter', version: '1.1.17'
 //	quartz引入(其依赖spring-context-support包,当使用spring-boot-starter-quartz时则不用添加该依赖)
@@ -121,5 +235,13 @@ dependencies {
 //	compile group: 'org.springframework.boot', name: 'spring-boot-starter-quartz' , version: '2.1.5.RELEASE'
 //	spring-boot-starter-web包里面有hibernate-validator包，不需要引用hibernate validator依赖
 //	compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.17.Final'
+
+//    easypoi http://easypoi.mydoc.io
+//    导入导出的工具包,可以完成Excel导出,导入,Word的导出,Excel的导出功能
+    compile group: 'cn.afterturn', name: 'easypoi-base', version: rootProject.dependentVersion.easypoiVersion
+//    基础注解类,解耦合 基础注解包,作用与实体对象上,拆分后方便maven多工程的依赖管理
+    compile group: 'cn.afterturn', name: 'easypoi-annotation', version: rootProject.dependentVersion.easypoiVersion
+//    耦合了spring-mvc 基于AbstractView,极大的简化spring-mvc下的导出功能,如果不使用spring mvc的便捷福利,直接引入easypoi-base 就可以了
+    compile group: 'cn.afterturn', name: 'easypoi-web', version: rootProject.dependentVersion.easypoiVersion
 
 }

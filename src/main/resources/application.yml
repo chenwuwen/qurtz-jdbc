@@ -1,6 +1,10 @@
 server:
   tomcat:
     uri-encoding: UTF-8
+#    配置最大线程数
+    max-threads: 200
+#    最大连接数
+    max-connections: 1000
   port: 1314
   display-name: qurtz-jdbc
 #  应用程序的上下文路径
@@ -11,15 +15,37 @@ server:
     path: "/500.html"
 
 spring:
+
+#  彩色日志
+  output:
+    ansi:
+      enabled: always
+
+#  springboot项目可以引用maven profile下变量，在maven打包时确定springboot的profile
+  profiles:
+    active: "dev"
+
+  devtools:
+    restart:
+      enabled: false
+      additional-exclude: src/main/java
+      exclude: /
+
+
   jpa:
 #    显示sql语句
     show-sql: true
     hibernate:
       ddl-auto: update
+
   http:
     encoding:
       charset: UTF-8
-#  多数据源时,此时换成自定义的名称,而不用datasource
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  #  多数据源时,此时换成自定义的名称,而不用datasource
   datasource:
 #    指定数据源名称,默认为testdb
     name: datasource
@@ -72,13 +98,16 @@ spring:
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 
-#    关闭默认模板引擎
+#    关闭默认模板引擎,如果加入了thymeleaf依赖页面会默认映射到resource的templates目录
   thymeleaf:
     enabled: false
     cache: false
 
+#  springboot默认静态资源位置在resource目录下
+#  resources:
+#    static-locations: "/webapp/"
 
-#  mvc配置
+  #  mvc配置
   mvc:
     view:
       prefix: "/"
@@ -108,7 +137,7 @@ mybatis-plus:
   #mp2.3+ 全局表前缀 mp_
   #table-prefix: mp_
   #刷新mapper 调试神器
-  #refresh-mapper: true
+  refresh-mapper: true
   #数据库大写下划线转换
   #capital-mode: true
   # Sequence序列接口实现类配置(Oracle主键自增的原理是序列)
@@ -141,11 +170,13 @@ mybatis-plus:
 
 
 
+#logback.xml会覆盖这个配置
 logging:
   level: info
 #  日志文件路径
   path:
-  pattern:
+#    如果pattern配置为空会报错
+#  pattern:
 #    日志文件格式
     file:
 #     控制台日志格式
