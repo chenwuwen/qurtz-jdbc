@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -19,7 +18,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @ImportResource(locations = {"classpath:kaptcha.xml"})
 @EnableScheduling
 @EnableCaching
-@SpringBootApplication(exclude = {WebMvcAutoConfiguration.class})
+//@SpringBootApplication(exclude = {WebMvcAutoConfiguration.class})
+@SpringBootApplication
 public class QurtzJdbcApplication {
 
 	public static void main(String[] args) {

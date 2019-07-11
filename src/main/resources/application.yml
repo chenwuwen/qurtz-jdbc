@@ -6,13 +6,12 @@ server:
 #    最大连接数
     max-connections: 1000
   port: 1314
-  display-name: qurtz-jdbc
-#  应用程序的上下文路径
-  context-path: "/"
-#  dispatchServlet路径
-  servlet-path:
   error:
     path: "/500.html"
+  servlet:
+  #  应用程序的上下文路径
+    context-path: /
+    application-display-name: qurtz-jdbc
 
 spring:
 
@@ -41,9 +40,12 @@ spring:
   http:
     encoding:
       charset: UTF-8
+
+  servlet:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+
 
   #  多数据源时,此时换成自定义的名称,而不用datasource
   datasource:
@@ -63,8 +65,8 @@ spring:
 #    数据库用户名密码
     username: kanyun
     password: kanyun
-#    指定初始化数据源，是否用data.sql来初始化，默认: true
-    initialize: true
+#    指定初始化数据源，是否用data.sql来初始化，参数为枚举类型 org.springframework.boot.jdbc.DataSourceInitializationMode
+    initialization-mode: EMBEDDED
 #    如果在初始化数据库时发生错误，停止
     continue-on-error: false
 #    建表SQL,默认加载schema*.sql 可以是多个
@@ -110,8 +112,8 @@ spring:
   #  mvc配置
   mvc:
     view:
-      prefix: "/"
-      suffix: ".html"
+      prefix: /pages/
+      suffix: .html
     locale: zh_CN
     date-format: "yyyy-MM-dd HH:mm:ss"
     async:
@@ -120,6 +122,7 @@ spring:
     favicon:
 #      是否显示springboot的图标(在浏览器标签页左上角)
       enabled: false
+
 
 
 mybatis-plus:
@@ -170,19 +173,21 @@ mybatis-plus:
 
 
 
-#logback.xml会覆盖这个配置
+#会覆盖logback.xml配置
 logging:
-  level: info
+  level:
+    root: debug
 #  日志文件路径
   path:
 #    如果pattern配置为空会报错
 #  pattern:
 #    日志文件格式
-    file:
+#    file:
 #     控制台日志格式
-    console:
-#    SpringBoot内部集成了LogBack所以我们不需要添加任何依赖
+#    console:
+#    SpringBoot内部集成了LogBack所以我们不需要添加任何依赖,指定logback配置
   config: classpath:logback.xml
 #  在日志系统初始化时为其注册一个关闭挂钩。
   register-shutdown-hook: true
+
 

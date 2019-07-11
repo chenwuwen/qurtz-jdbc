@@ -3,17 +3,15 @@ package cn.kanyun.qurtzjdbc.config;
 import lombok.extern.slf4j.Slf4j;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.resource.ClasspathResourceLoader;
-import org.beetl.core.resource.WebAppResourceLoader;
 import org.beetl.ext.spring.BeetlGroupUtilConfiguration;
 import org.beetl.ext.spring.BeetlSpringViewResolver;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternUtils;
-
-import java.io.File;
 
 /**
  * Beetl模板官网：http://ibeetl.com/
@@ -26,15 +24,19 @@ import java.io.File;
 @Configuration
 public class BeetlConfig {
 
+    @Value("${spring.mvc.view.prefix}")
+    private String prefix;
 
     @Bean(name = "beetlConf",initMethod = "init")
     public BeetlGroupUtilConfiguration getBeetlGroupUtilConfiguration() {
         BeetlGroupUtilConfiguration beetlGroupUtilConfiguration = new BeetlGroupUtilConfiguration();
-        ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader();
+        ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader(BeetlConfig.class.getClassLoader(), prefix);
 //        WebAppResourceLoader 是用于Java EE web应用的资源模板加载器，默认根路径是WebRoot目录。也可以通过制定root属性来设置相对于WebRoot的的模板根路径
 //        WebAppResourceLoader 假定 beetl.jar 是位于 WEB-INF/lib 目录下，因此，可以通过WebAppResourceLoader类的路径来推断出WebRoot路径从而指定模板根路径。所有线上环境一般都是如此，如果是开发环境或者其他环境不符合此假设，你需要调用resourceLoader.setRoot() 来指定模板更路径
 //        WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
-        System.out.println(resourceLoader.getRoot());
+//        System.out.println(resourceLoader.getRoot());
+//        如果无法加载模板,请尝试调试ResourceLoader的exist的方法，找到加载模板不成功原因
+//        resourceLoader.exist("index.html");
         beetlGroupUtilConfiguration.setResourceLoader(resourceLoader);
 //        设置 beetl.properties 路径
         ResourcePatternResolver resouce = ResourcePatternUtils.getResourcePatternResolver(new DefaultResourceLoader());
@@ -58,17 +60,17 @@ public class BeetlConfig {
     @Bean(name = "beetlViewResolver")
     public BeetlSpringViewResolver getBeetlSpringViewResolver(@Qualifier("beetlConf") BeetlGroupUtilConfiguration beetlGroupUtilConfiguration) {
         BeetlSpringViewResolver beetlSpringViewResolver = new BeetlSpringViewResolver();
-//      不启用 springMvc 的 前缀。。使用 beetl自带 的 RESOURCE.root
-//        beetlSpringViewResolver.setPrefix("view/");
+//      不启用 springMvc 的 前缀（beetl不推荐）。。使用 beetl自带 的 RESOURCE.root)
+//        beetlSpringViewResolver.setPrefix("/pages/");
 //        beetl默认处理后缀名为btl的文件,这里不进行设置时,在Controller中返回页面时应该带上以btl为后缀结尾的页面
 //        beetl.suffix 默认为btl，表示只处理视图后缀为btl的模板，比如controller里代码是“return /common/index.btl”,则能被Beetl处理，你写成"return /common/index",或者"/common/index.html",都会出现404错误
-//        beetlSpringViewResolver.setSuffix(".btl");
+        beetlSpringViewResolver.setSuffix(".html");
         beetlSpringViewResolver.setContentType("text/html;charset=UTF-8");
 //        viewResolver 作用的顺序
         beetlSpringViewResolver.setOrder(0);
 //        解析器里属性viewNames，这个用于判断controller返回的path到底应该交给哪个视图解析器来做,比如返回 aa/xx 由a解析器解析 返回 bb/xx 则由b解析器解析
-        beetlSpringViewResolver.setViewNames("/");
-        beetlSpringViewResolver.setConfig(beetlGroupUtilConfiguration);
+//        beetlSpringViewResolver.setViewNames("/pages");
+        beetlSpringViewResolver.setConfig(getBeetlGroupUtilConfiguration());
         return beetlSpringViewResolver;
     }
 

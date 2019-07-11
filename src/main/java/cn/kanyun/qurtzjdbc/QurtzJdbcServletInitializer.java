@@ -2,8 +2,8 @@ package cn.kanyun.qurtzjdbc;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.Conditional;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+
 
 /**
  * Web程序启动类
@@ -28,12 +28,12 @@ import org.springframework.context.annotation.Conditional;
  * 2.修饰配置类中的方法时：当配置类满足条件，配置类中方法若被@Conditional 注解修饰，满足注解的条件，执行此方法，否则不执行。
  * 注解中条件设置通过其属性值xxx.java定义，xxx.java实现Conditon接口
  */
-//@Slf4j
+@Slf4j
 //@Conditional()
-//public class QurtzJdbcServletInitializer extends SpringBootServletInitializer {
-//    @Override
-//    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-//        log.info("==========以web方式启动应用==========");
-//        return builder.sources(QurtzJdbcServletInitializer.class);
-//    }
-//}
+public class QurtzJdbcServletInitializer extends SpringBootServletInitializer {
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        log.info("==========以web方式启动应用==========");
+        return builder.sources(QurtzJdbcServletInitializer.class);
+    }
+}

@@ -3,7 +3,8 @@
 //rootProject 可以不加, 变量也不能加引号 和 ${}
 ext{
     dependentVersion=[
-            easypoiVersion : '4.1.0'
+            easypoiVersion : '4.1.0',
+            swaggerVersion : '2.9.2'
 
     ]
 }
