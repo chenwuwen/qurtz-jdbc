@@ -257,4 +257,13 @@ dependencies {
 //    耦合了spring-mvc 基于AbstractView,极大的简化spring-mvc下的导出功能,如果不使用spring mvc的便捷福利,直接引入easypoi-base 就可以了
     compile group: 'cn.afterturn', name: 'easypoi-web', version: rootProject.dependentVersion.easypoiVersion
 
+//    加入GraphQL依赖
+    compile group: 'com.graphql-java', name: 'graphql-spring-boot-starter', version: '4.0.0'
+//    GraphQL Java Tools是一个软件包，能够从GraphQL的模式定义*.graphqls文件构建出对应的Java的POJO类型对象
+    compile group: 'com.graphql-java', name: 'graphql-java-tools', version: '4.3.0'
+//    可视化调试工具
+    compile group: 'com.graphql-java', name: 'graphiql-spring-boot-starter', version: '4.3.0'
+
+
+
 }

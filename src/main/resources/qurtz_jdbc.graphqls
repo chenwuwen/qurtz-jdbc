@@ -1,0 +1,20 @@
+schema{
+    query: UserQuery
+}
+
+type UserQuery{
+    UserEntity : UserEntity
+}
+
+
+#对应的实体类
+type UserEntity{
+    id: Int
+    userName: String
+    password: String
+    area: String
+    age: Int
+    phone: Int
+    registerDate: Int
+    registerIp: Int
+}

@@ -5,10 +5,13 @@ import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
 import org.beetl.core.resource.StringTemplateResourceLoader;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -19,10 +22,24 @@ import java.time.LocalDateTime;
 @Slf4j
 public class IndexController {
 
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("title", "欢迎使用该项目");
-        model.addAttribute("author", "看雲");
+    @GetMapping(value = {"/index", "/"})
+    public String index(Model model, HttpServletRequest request) {
+        request.getSession().setAttribute("author", "看雲");
+        log.debug("[{}]访问首页", LocalDateTime.now());
+        return "index";
+    }
+
+    /**
+     * @param model
+     * @param request
+     * @return
+     * @ResponseStatus注解可以标注请求处理方法。使用此注解，可以指定响应所需要的HTTP STATUS。
+     * 特别地，我们可以使用HttpStauts类对该注解的value属性进行赋值
+     */
+    @GetMapping("/error")
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String error(Model model, HttpServletRequest request) {
+        request.getSession().setAttribute("author", "看雲");
         log.debug("[{}]访问首页", LocalDateTime.now());
         return "index";
     }

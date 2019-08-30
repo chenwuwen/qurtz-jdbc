@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
+ * @EnableAutoConfiguration注解用于通知Spring，根据当前类路径下引入的依赖包，自动配置与这些依赖包相关的配置项。
  * @EnableCaching 开启缓存注解
  * @EnableScheduling 开启计划任务支持
  * @ImportResource springboot就会去加载kaptcha.xml文件 ,使用时查看kaptcha.xml文件中Bean Id直接注入使用 https://www.jianshu.com/p/1f2f7c47e812

@@ -1,5 +1,6 @@
 package cn.kanyun.qurtzjdbc.config;
 
+import cn.kanyun.qurtzjdbc.common.BeetlGlobalParam;
 import lombok.extern.slf4j.Slf4j;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.resource.ClasspathResourceLoader;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternUtils;
@@ -51,13 +53,23 @@ public class BeetlConfig {
         GroupTemplate groupTemplate = beetlGroupUtilConfiguration.getGroupTemplate();
         groupTemplate.setClassLoader(loader);
 
+//        设置beetl模板的全局变量[页面需要使用的常量]
+        beetlGroupUtilConfiguration.setSharedVars(BeetlGlobalParam.getParam());
+
 //        这里是需要注册的标签
 //        如果需要自定义标签,需要在此处注册,同时注意获取GroupTemplate前必须先调用init方法，否则获取到的GroupTemplate为 null,同时不要在@Bean中指定initMethod = "init"
 //        groupTemplate.registerTag("simpleTag", SimpleHtmlTag.class);
         return beetlGroupUtilConfiguration;
     }
 
+    /**
+     * @DependsOn注解可以配置Spring IoC容器在初始化一个Bean之前，先初始化其他的Bean对象。
+     * 这是最终要用的ViewResolver
+     * @param beetlGroupUtilConfiguration
+     * @return
+     */
     @Bean(name = "beetlViewResolver")
+    @DependsOn(value = {"beetlConf"})
     public BeetlSpringViewResolver getBeetlSpringViewResolver(@Qualifier("beetlConf") BeetlGroupUtilConfiguration beetlGroupUtilConfiguration) {
         BeetlSpringViewResolver beetlSpringViewResolver = new BeetlSpringViewResolver();
 //      不启用 springMvc 的 前缀（beetl不推荐）。。使用 beetl自带 的 RESOURCE.root)
@@ -86,11 +98,13 @@ public class BeetlConfig {
      * @param beetlGroupUtilConfiguration
      * @return
      */
-//    @Bean(name = "groupTemplate")
-//    public GroupTemplate getGroupTemplate(
-//            @Qualifier("beetlConf") BeetlGroupUtilConfiguration beetlGroupUtilConfiguration) {
-//        return beetlGroupUtilConfiguration.getGroupTemplate();
-//
-//    }
+    @Bean(name = "groupTemplate")
+    public GroupTemplate getGroupTemplate(
+            @Qualifier("beetlConf") BeetlGroupUtilConfiguration beetlGroupUtilConfiguration) {
+        GroupTemplate groupTemplate = beetlGroupUtilConfiguration.getGroupTemplate();
+//        groupTemplate.registerFunctionPackage();
+        return groupTemplate;
+
+    }
 
 }

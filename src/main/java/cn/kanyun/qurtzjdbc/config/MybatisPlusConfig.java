@@ -7,11 +7,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
+ * MybatisPlus 配置
  * @author KANYUN
  */
 @EnableTransactionManagement
 @Configuration
-@MapperScan("com.baomidou.cloud.service.*.mapper*")
+@MapperScan("cn.kanyun.qurtzjdbc.dao")
 public class MybatisPlusConfig {
 
     /**

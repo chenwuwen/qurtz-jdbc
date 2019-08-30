@@ -79,7 +79,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
 //        本应用(由于使用了gradle的sourceSets所以在打包时会把webapp下的静态页打包到压缩包中)
-        registry.addResourceHandler("/asserts/**").addResourceLocations("classpath:/asserts/");
+//        registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/assets/");
+
     }
 
     /**
