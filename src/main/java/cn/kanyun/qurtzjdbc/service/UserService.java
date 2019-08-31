@@ -14,5 +14,5 @@ public interface UserService extends BaseService<Long, UserEntity> {
      * @param userEntity
      * @return
      */
-    boolean login(UserEntity userEntity);
+    UserEntity login(UserEntity userEntity);
 }

@@ -1,15 +1,41 @@
 schema{
     query: UserQuery
+    query: TenantQuery
+    #mutation: TenantMutation
 }
 
+#查询User方法集合(不需要传参数的,不写小括号)
 type UserQuery{
-    UserEntity : UserEntity
+    getUserList: [UserEntity]
+
+}
+
+type TenantQuery{
+    getTenantList: [Tenant]
+    getTenant(id : Long!): Tenant
+}
+
+#增删改方法集合
+type TenantMutation{
+    #创建一个Tenant并返回一个ID
+    createTenant(tenantInput:TenantInput): Long!
+}
+
+#映射输入参数
+input TenantInput{
+    tenantName: String
+    domain: String
+    dbUrl: String
+    dbUser: Int
+    dbPass: Int
 }
 
 
 #对应的实体类
+#可以直接使用的基本类型：String Int Float Boolean ID,以上是官方提供的支持类型,但是在各个语言实现中
+#都有对类型进行了扩充,也就是GraphQl支持自定义类型,比如graphql-java实现中增加了：Long Byte等
 type UserEntity{
-    id: Int
+    id: Long
     userName: String
     password: String
     area: String
@@ -17,4 +43,15 @@ type UserEntity{
     phone: Int
     registerDate: Int
     registerIp: Int
+}
+
+
+type Tenant{
+    id: Long
+    tenantName: String
+    domain: String
+    dbUrl: String
+    dbUser: String
+    dbPass: String
+    registerDate: Int
 }

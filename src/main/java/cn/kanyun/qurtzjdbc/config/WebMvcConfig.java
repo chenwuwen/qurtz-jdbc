@@ -1,9 +1,9 @@
 package cn.kanyun.qurtzjdbc.config;
 
+import cn.kanyun.qurtzjdbc.interceptor.BaseInterceptor;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import org.beetl.ext.spring.BeetlSpringViewResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -12,9 +12,17 @@ import org.springframework.validation.Validator;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -27,6 +35,7 @@ import java.util.List;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
+
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
 
@@ -34,6 +43,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     /**
      * 配置内容裁决的一些选项
+     *
      * @param configurer
      */
     @Override
@@ -48,6 +58,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     /**
      * 默认静态资源处理器
+     *
      * @param configurer
      */
     @Override
@@ -62,12 +73,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-
+        //需要配置2：----------- 告知拦截器：/static/admin/** 与 /static/user/** 不需要拦截 （配置的是 路径）
+        registry.addInterceptor(new BaseInterceptor()).addPathPatterns("/**")
+                .excludePathPatterns("/assets/**");
     }
 
     /**
      * 静态资源处理
-     *
+     * <p>
      * 添加处理程序以服务静态资源，如图像、JS和CSS
      * 来自Web应用程序根目录下特定位置的文件，以及其他。
      *
@@ -75,12 +88,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        //swagger
+//        第一个方法设置访问路径前缀，第二个方法设置资源路径
+//        swagger静态资源
         registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+//        webjars
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-//        本应用(由于使用了gradle的sourceSets所以在打包时会把webapp下的静态页打包到压缩包中)
-//        registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/assets/");
+//        graphql客户端graphiql的静态资源
+        registry.addResourceHandler("/vendor/**").addResourceLocations("classpath:/static/vendor/");
 
+//        本应用(由于使用了gradle的sourceSets所以在打包时会把webapp下的静态页打包到压缩包中)
+        registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/assets/");
     }
 
     /**

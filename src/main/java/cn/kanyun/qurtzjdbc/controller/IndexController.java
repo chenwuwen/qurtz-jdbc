@@ -24,8 +24,11 @@ public class IndexController {
 
     @GetMapping(value = {"/index", "/"})
     public String index(Model model, HttpServletRequest request) {
-        request.getSession().setAttribute("author", "看雲");
+//        request.getSession().setAttribute("author", "看雲");
         log.debug("[{}]访问首页", LocalDateTime.now());
+        if (request.getSession().getAttribute("author") == null) {
+            return "redirect:login";
+        }
         return "index";
     }
 
@@ -39,9 +42,7 @@ public class IndexController {
     @GetMapping("/error")
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String error(Model model, HttpServletRequest request) {
-        request.getSession().setAttribute("author", "看雲");
-        log.debug("[{}]访问首页", LocalDateTime.now());
-        return "index";
+        return "500";
     }
 
 

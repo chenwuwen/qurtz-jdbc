@@ -258,10 +258,12 @@ dependencies {
     compile group: 'cn.afterturn', name: 'easypoi-web', version: rootProject.dependentVersion.easypoiVersion
 
 //    加入GraphQL依赖
-    compile group: 'com.graphql-java', name: 'graphql-spring-boot-starter', version: '4.0.0'
+    compile group: 'com.graphql-java', name: 'graphql-spring-boot-starter', version: '5.0.2'
+//    上面的graphql-spring-boot-starter中使用的graphql-java的版本更新比graphql-java要慢
+    compile 'com.graphql-java:graphql-java:11.0'
 //    GraphQL Java Tools是一个软件包，能够从GraphQL的模式定义*.graphqls文件构建出对应的Java的POJO类型对象
-    compile group: 'com.graphql-java', name: 'graphql-java-tools', version: '4.3.0'
-//    可视化调试工具
+    compile group: 'com.graphql-java', name: 'graphql-java-tools', version: '5.2.4'
+//    可视化调试工具（GraphQL调试客户端graphiql类似PostMan）
     compile group: 'com.graphql-java', name: 'graphiql-spring-boot-starter', version: '4.3.0'
 
 

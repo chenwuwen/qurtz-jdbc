@@ -5,13 +5,10 @@ import cn.kanyun.qurtzjdbc.entity.Result;
 import cn.kanyun.qurtzjdbc.quartz.QuartzService;
 import cn.kanyun.qurtzjdbc.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -35,7 +32,7 @@ public class TaskController {
      *
      * @return
      */
-    @GetMapping("/")
+    @GetMapping(value = {"/", "list", ""})
     public String list() {
         log.debug("[{}]进入定时任务列表页", LocalDateTime.now());
         return "task";
