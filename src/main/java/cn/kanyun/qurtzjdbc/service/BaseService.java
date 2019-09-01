@@ -1,7 +1,6 @@
 package cn.kanyun.qurtzjdbc.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.io.Serializable;
 import java.util.List;
@@ -32,4 +31,25 @@ public interface BaseService<K extends Serializable, T extends Serializable> {
      * @return
      */
     T queryById(K id);
+
+    /**
+     * 插入
+     * @param t
+     * @return
+     */
+    int insert(T t);
+
+    /**
+     * 根据ID删除
+     * @param k
+     * @return
+     */
+    int remove(K k);
+
+    /**
+     * 更新
+     * @param t
+     * @return
+     */
+    int update(T t);
 }

@@ -33,16 +33,6 @@ public class LoginController {
     @Resource
     private Producer captchaProducer;
 
-    @PostMapping("/login")
-    public String login(UserEntity user,HttpServletRequest request) {
-        log.debug("用户登录");
-        if (userService.login(user) != null) {
-            request.getSession().setAttribute("author",user.getUserName());
-            return "redirect:/index";
-        }
-        return "login";
-    }
-
     @GetMapping("/login")
     public String login(HttpServletRequest request) {
         log.debug("用户登录");
@@ -51,6 +41,21 @@ public class LoginController {
         }
         return "login";
     }
+
+    @PostMapping("/login")
+    public String login(UserEntity user, HttpServletRequest request) {
+        log.debug("用户登录");
+//        判断验证码
+        if (request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY).equals(user.getCaptcha())) {
+            if (userService.login(user) != null) {
+                request.getSession().setAttribute("author", user.getUserName());
+                return "redirect:/index";
+            }
+        }
+
+        return "login";
+    }
+
 
     @RequestMapping(value = "verification", method = RequestMethod.GET)
     public ModelAndView verification(HttpServletRequest request, HttpServletResponse response) throws IOException {

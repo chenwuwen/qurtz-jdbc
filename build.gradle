@@ -233,7 +233,7 @@ dependencies {
     compile group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: '3.1.0'
 //    gradle5使用lombok加如下两条命令
 //	如果jar包/依赖代码 仅在编译的时候需要，但是在运行时不需要依赖,就用providedCompile
-    providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+    compileOnly  group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
 //    AnnotationProcessor 就是注解编译，通过它，我们可以在编译阶段拿到注解对象（类、属性、方法等）的属性、注解值。我们常用的做法是把拿到的元素包装下，写成一个Java类。然后在业务代码里使用反射、实例化得对该java类进行操作。
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
 //	beetl模板引擎
@@ -265,7 +265,9 @@ dependencies {
     compile group: 'com.graphql-java', name: 'graphql-java-tools', version: '5.2.4'
 //    可视化调试工具（GraphQL调试客户端graphiql类似PostMan）
     compile group: 'com.graphql-java', name: 'graphiql-spring-boot-starter', version: '4.3.0'
-
+    
+//    mysql连接驱动
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.47'
 
 
 }

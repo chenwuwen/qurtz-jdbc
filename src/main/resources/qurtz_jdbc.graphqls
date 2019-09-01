@@ -1,33 +1,33 @@
 schema{
-    query: UserQuery
-    query: TenantQuery
-    #mutation: TenantMutation
+    query: QueryHandler
+    mutation: MutationHandler
 }
 
-#查询User方法集合(不需要传参数的,不写小括号)
-type UserQuery{
+#查询方法集合(不需要传参数的,不写小括号)
+type QueryHandler{
     getUserList: [UserEntity]
-
-}
-
-type TenantQuery{
-    getTenantList: [Tenant]
     getTenant(id : Long!): Tenant
+    getTenantList: [Tenant]
 }
 
-#增删改方法集合
-type TenantMutation{
+
+
+#Tenant增删改查方法集合
+type MutationHandler{
     #创建一个Tenant并返回一个ID
-    createTenant(tenantInput:TenantInput): Long!
+    createTenant(tenantInput:TenantInput): Int!
+    removeTenant(id : Long!): Int!
+    updateTenant(tenantInput:TenantInput!): Int!
 }
 
 #映射输入参数
 input TenantInput{
-    tenantName: String
-    domain: String
-    dbUrl: String
-    dbUser: Int
-    dbPass: Int
+    tenantName: String!
+    simplicity: String!
+    domain: String!
+    dbUrl: String!
+    dbUser: String!
+    dbPass: String!
 }
 
 
@@ -41,7 +41,7 @@ type UserEntity{
     area: String
     age: Int
     phone: Int
-    registerDate: Int
+    registerDate: Long
     registerIp: Int
 }
 
@@ -51,7 +51,8 @@ type Tenant{
     tenantName: String
     domain: String
     dbUrl: String
+    simplicity: String
     dbUser: String
     dbPass: String
-    registerDate: Int
+    registerDate: Long
 }

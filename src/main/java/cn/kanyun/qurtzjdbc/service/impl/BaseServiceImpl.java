@@ -35,4 +35,20 @@ public abstract class BaseServiceImpl<K extends Serializable,T extends Serializa
     public T queryById(K id) {
         return baseMapper.selectById(id);
     }
+
+    @Override
+    public int insert(T t) {
+        return baseMapper.insert(t);
+    }
+
+
+    @Override
+    public int remove(K k) {
+        return baseMapper.deleteById(k);
+    }
+
+    @Override
+    public int update(T t) {
+        return baseMapper.updateById(t);
+    }
 }

@@ -1,5 +1,6 @@
 package cn.kanyun.qurtzjdbc.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -34,9 +35,15 @@ public class UserEntity implements Serializable {
     private String area;
     @TableField(value = "PHONE")
     private Long phone;
-    @TableField(value = "REGISTER_DATE")
+    @TableField(value = "REGISTER_DATE",fill = FieldFill.INSERT_UPDATE)
     private Long registerDate;
     @TableField(value = "REGISTER_IP")
     private Long registerIp;
+
+    /**
+     * 验证码,非数据库字段
+     */
+    @TableField(exist = false)
+    private String captcha;
 
 }

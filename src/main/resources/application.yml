@@ -29,11 +29,15 @@ spring:
   profiles:
     active: "dev"
 
+#  热部署配置
   devtools:
     restart:
-      enabled: false
-      additional-exclude: src/main/java
-      exclude: /
+#      热部署是否生效
+      enabled: true
+#      配置哪些目录的修改,会进行热部署
+      additional-paths: src/main/java
+#      排除哪些目录的修改不重启
+      exclude: src/main/webapp
 
 
   jpa:
@@ -53,6 +57,7 @@ spring:
 
   #  多数据源时,此时换成自定义的名称,而不用datasource
   datasource:
+
     #    指定数据源名称,默认为testdb
     name: datasource
     #    随机生成数据源名称
@@ -61,14 +66,17 @@ spring:
     platform: all
     #    JDBC驱动程序的完全限定名，默认从jdbc url中自动探测.
     driver-class-name: org.hsqldb.jdbc.JDBCDriver
+#    driver-class-name: com.mysql.jdbc.Driver
     #    要使用的连接池实现的完全限定名
     #    指定数据库连接池为druid,springboot 2.0 默认连接池就是Hikari了(引用parents后不用专门加依赖),如果使用其他连接池，还是需要添加依赖的
     type: com.alibaba.druid.pool.DruidDataSource
     #    文件存放位置(同URL) https://blog.csdn.net/jacky1982728/article/details/84924332
-    url: jdbc:hsqldb:file:db/qurtz_jbdc_demo;shutdown=true
+#    之前的Hsql连接时file类型的(会生成相应的文件和文件夹),改为mem内存类型:几种类型介绍：https://blog.csdn.net/fanxiaobin577328725/article/details/51800776
+    url: jdbc:hsqldb:mem:qurtz_jbdc_demo
+#    url: jdbc:mysql://localhost:3306/test
     #    数据库用户名密码
-    username: kanyun
-    password: kanyun
+    username: root
+    password: root
     #    指定初始化数据源，是否用data.sql来初始化，参数为枚举类型 org.springframework.boot.jdbc.DataSourceInitializationMode
     initialization-mode: ALWAYS
     #    如果在初始化数据库时发生错误，停止
@@ -78,14 +86,14 @@ spring:
     #    数据SQL,默认加载data*.sql 可以是多个[HSQL在SQL语句中,其表名不能添加反引号,这一点与Mysql不同]
     data: classpath:data.sql
     #    执行DML脚本的数据库用户
-    data-username: kanyun
+    data-username: root
     #     执行DML脚本的数据库用户密码
-    data-password: kanyun
+    data-password: root
     #      SQL初始化脚本中的语句分隔符。
     separator: ;
     #    SQL脚本编码。
     sql-script-encoding: UTF-8
-    #    我们除了可以再application.yml中设置各个starter模块中预定义的配置属性,也可以再配置文件中定义一些我们需要自定义属性,然后在应用中通过@Value注解来加载这些自定义的参数
+    #    我们除了可以在application.yml中设置各个starter模块中预定义的配置属性,也可以再配置文件中定义一些我们需要自定义属性,然后在应用中通过@Value注解来加载这些自定义的参数
     #    下面这些不是springboot的配置,而是druid的配置,写在此处是要druid的配置类去读取的
     initialSize: 5
     minIdle: 5
@@ -211,4 +219,5 @@ graphql:
   servlet:
     corsEnabled: true
     enabled: true
+#    graphql的端点配置,需要注意的是graphql只有一个Endpoint,这个Endpoint是前端访问后端的唯一地址
     mapping: /graphql
