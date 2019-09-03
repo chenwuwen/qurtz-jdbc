@@ -1,4 +1,4 @@
-package cn.kanyun.qurtzjdbc.common.tenant;
+package cn.kanyun.qurtzjdbc.tenant.chain;
 
 import cn.kanyun.qurtzjdbc.entity.Tenant;
 

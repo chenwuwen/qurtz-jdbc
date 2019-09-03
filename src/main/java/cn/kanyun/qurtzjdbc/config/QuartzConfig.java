@@ -47,7 +47,7 @@ public class QuartzConfig {
      * @param jobFactory 为SchedulerFactory配置JobFactory
      */
     @Bean(name = "schedulerFactoryBean")
-    public SchedulerFactoryBean schedulerFactoryBean(@Qualifier("dataSource") DataSource dataSource, JobFactory jobFactory) throws IOException {
+    public SchedulerFactoryBean schedulerFactoryBean(@Qualifier("defaultDataSource") DataSource dataSource, JobFactory jobFactory) throws IOException {
         SchedulerFactoryBean factory = new SchedulerFactoryBean();
         //可选,QuartzScheduler启动时更新己存在的Job,这样就不用每次修改targetObject后删除qrtz_job_details表对应记录
         factory.setOverwriteExistingJobs(true);

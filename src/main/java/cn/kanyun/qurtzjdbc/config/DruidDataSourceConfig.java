@@ -9,6 +9,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -135,10 +136,13 @@ public class DruidDataSourceConfig {
     private List<String> connectionInitSqls;
 
 
-
-
-
-    @Bean(name = "dataSource")
+    /**
+     * 自动装配时当出现多个Bean候选者时，被注解为@Primary的Bean将作为首选者，否则将抛出异常
+     * 默认的DataSource配置在application.yml文件中
+     * @return
+     */
+    @Primary
+    @Bean(name = "defaultDataSource")
     public DataSource druidDataSource() {
         DruidDataSource datasource = new DruidDataSource();
         datasource.setName(name);

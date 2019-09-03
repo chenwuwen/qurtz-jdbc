@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kanyun.qurtzjdbc.dao.TenantMapper">
+    <resultMap id="BaseResultMap" type="cn.kanyun.qurtzjdbc.entity.Tenant">
+
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="TENANT_NAME" jdbcType="VARCHAR" property="tenantName"/>
+        <result column="SIMPLICITY" jdbcType="VARCHAR" property="simplicity"/>
+        <result column="DOMAIN" jdbcType="VARCHAR" property="domain"/>
+        <result column="DB_URL" jdbcType="VARCHAR" property="dbUrl"/>
+        <result column="DB_USER" jdbcType="VARCHAR" property="dbUser"/>
+        <result column="DB_PASS" jdbcType="VARCHAR" property="dbPass"/>
+        <result column="REGISTER_DATE" jdbcType="BIGINT" property="registerDate"/>
+    </resultMap>
+
+
+</mapper>

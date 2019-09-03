@@ -46,7 +46,7 @@ public class LoginController {
     public String login(UserEntity user, HttpServletRequest request) {
         log.debug("用户登录");
 //        判断验证码
-        if (request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY).equals(user.getCaptcha())) {
+        if (request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY).equals(user.getCaptcha().toLowerCase())) {
             if (userService.login(user) != null) {
                 request.getSession().setAttribute("author", user.getUserName());
                 return "redirect:/index";
@@ -69,7 +69,7 @@ public class LoginController {
         // return a jpeg
         response.setContentType("image/jpeg");
         // create the text for the image
-        String capText = captchaProducer.createText();
+        String capText = captchaProducer.createText().toLowerCase();
         // store the text in the session
         request.getSession().setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
         // create the image with the text

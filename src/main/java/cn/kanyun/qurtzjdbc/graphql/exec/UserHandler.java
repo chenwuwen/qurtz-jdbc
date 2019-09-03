@@ -33,8 +33,6 @@ public class UserHandler implements GraphQLMutationResolver, GraphQLQueryResolve
      * @param query
      * @return
      */
-//    @GetMapping()
-//    @ResponseBody
     public Map<String, Object> list(@RequestParam("query") String query) {
         return graphQL.execute(query).toSpecification();
     }

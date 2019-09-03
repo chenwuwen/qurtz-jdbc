@@ -231,6 +231,8 @@ dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '28.0-jre'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
     compile group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: '3.1.0'
+//    mybatis-plus模板代码生成器依赖
+    compile group: 'com.baomidou', name: 'mybatis-plus-generator', version: '3.2.0'
 //    gradle5使用lombok加如下两条命令
 //	如果jar包/依赖代码 仅在编译的时候需要，但是在运行时不需要依赖,就用providedCompile
     compileOnly  group: 'org.projectlombok', name: 'lombok', version: '1.18.8'

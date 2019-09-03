@@ -1,4 +1,4 @@
-package cn.kanyun.qurtzjdbc.common.tenant;
+package cn.kanyun.qurtzjdbc.tenant.chain;
 
 import cn.kanyun.qurtzjdbc.entity.Tenant;
 import lombok.extern.slf4j.Slf4j;
@@ -41,12 +41,14 @@ public class BuildAppChain extends TenantInitChain {
             }
             log.debug("访问Properties文件中的所有属性结束");
 //            setProperty()方法：key存在则替换,不存在则新增
-            properties.setProperty("sda", "kanyun");
+            properties.setProperty("applicationId", tenant.getDomain());
+            properties.setProperty("applicationName", tenant.getTenantName());
 
 //            修改完后要调用store()方法,否则修改的不保存
             Writer w = new FileWriter(propertiesPath);
             properties.store(w,"");
             w.close();
+            file.getParent();
         } catch (IOException e) {
             e.printStackTrace();
         }

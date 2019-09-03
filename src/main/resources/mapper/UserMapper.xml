@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kanyun.qurtzjdbc.dao.UserMapper">
+    <resultMap id="BaseResultMap" type="cn.kanyun.qurtzjdbc.entity.UserEntity">
+
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+        <result column="PASSWORD" jdbcType="VARCHAR" property="password"/>
+        <result column="AGE" jdbcType="INTEGER" property="age"/>
+        <result column="AREA" jdbcType="VARCHAR" property="area"/>
+        <result column="PHONE" jdbcType="BIGINT" property="phone"/>
+        <result column="REGISTER_DATE" jdbcType="BIGINT" property="registerDate"/>
+        <result column="REGISTER_IP" jdbcType="BIGINT" property="registerIp"/>
+    </resultMap>
+
+
+
+</mapper>
