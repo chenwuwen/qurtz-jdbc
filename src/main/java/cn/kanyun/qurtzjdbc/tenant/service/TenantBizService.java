@@ -9,7 +9,6 @@ import java.util.List;
 /**
  * @author Kanyun
  */
-@DynamicDataSource
 public interface TenantBizService extends BaseService<Long, TenantBiz> {
 
     /**

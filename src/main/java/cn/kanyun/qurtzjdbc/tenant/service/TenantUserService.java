@@ -10,7 +10,6 @@ import java.util.Optional;
 /**
  * @author Kanyun
  */
-@DynamicDataSource
 public interface TenantUserService extends BaseService<Long, TenantUser> {
     /**
      * 租户登录

@@ -58,7 +58,7 @@ public class TenantIndexController {
     public Map getBizList(HttpServletRequest request) {
         log.debug("租户获取业务列表");
         Map map = new HashMap(3);
-        String domain = request.getScheme() + "://" + request.getServerName() + ":" + request.getRemotePort();
+        String domain = request.getScheme() + "://" + request.getServerName() + ":" + request.getLocalPort();
         List<TenantBiz> tenantBizs = tenantBizService.queryAll();
         map.put("code", 0);
         map.put("count", tenantBizs.size());

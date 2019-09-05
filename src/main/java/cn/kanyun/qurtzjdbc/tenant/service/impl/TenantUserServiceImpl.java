@@ -12,6 +12,9 @@ import javax.annotation.Resource;
 import java.util.Optional;
 
 /**
+ * 需要注意的是@DynamicDataSource自定义的注解设置在接口上不生效的,
+ * 即使是在注解定义中添加了@Inherited元注解
+ * https://www.jianshu.com/p/7f54e7250be3
  * @author Kanyun
  */
 @Service

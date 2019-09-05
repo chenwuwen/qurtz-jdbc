@@ -81,6 +81,7 @@ public class MybatisPlusConfig {
      * @ConfigurationProperties注解也可以读取yml文件 多数据源要配置SqlSessionFactoryBean否则无法切换数据源
      * 同时这里需要使用MybatisSqlSessionFactoryBean 而不是SqlSessionFactoryBean
      * 否则会报错：Invalid bound statement (not found)
+     * 如果不是使用的不是Mybatis-Plus的话,使用SqlSessionFactoryBean
      */
     @Bean
     @ConfigurationProperties(prefix = "mybatis-plus")
