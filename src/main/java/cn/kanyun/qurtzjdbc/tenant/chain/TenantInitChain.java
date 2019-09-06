@@ -22,7 +22,15 @@ public abstract class TenantInitChain {
           this.nextTenantInitChain = chain;
      }
 
-     /**
+    /**
+     * 获取下一个处理者
+     * @return
+     */
+    public TenantInitChain getNextTenantInitChain() {
+        return nextTenantInitChain;
+    }
+
+    /**
       * 抽象方法 子类实现
       * @param tenant
       */

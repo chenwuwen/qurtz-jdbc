@@ -53,9 +53,6 @@ public class TenantObserver implements Observer {
             InitTenantTableChain initTenantTableChain = new InitTenantTableChain(buildAppChain);
             CreateDatabaseChain createDatabaseChain = new CreateDatabaseChain(initTenantTableChain);
             createDatabaseChain.handler(tenant);
-            initTenantTableChain.handler(tenant);
-            buildAppChain.handler(tenant);
-            updateDynamicDataSourceChain.handler(tenant);
 
 //        这里不再执行tenantDataSource.createDataSource()方法是因为tenantDataSource本身也是一个观察者
 //        当Tenant发生改变时,就已经执行了createDataSource()方法,

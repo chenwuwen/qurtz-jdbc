@@ -60,9 +60,14 @@ public class BuildAppChain extends TenantInitChain {
             String batPath = ResourceUtils.getFile("classpath:buildApp.bat").getAbsolutePath();
             log.debug("构建App脚本位置：{}", batPath);
 //            调用系统CMD是阻塞的,开启线程执行调用[生产环境应当调用CI去构建]
-//            new Thread(CMDUtil.excuteBatFileWithNewWindow(batPath, false));
+            new Thread(CMDUtil.excuteBatFileWithNewWindow(batPath, false));
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+//            如果下一个处理者不是null的话,往下传递执行,如果设定的是中间环节出错则终止处理,则应该将此代码放入try块中
+            if (getNextTenantInitChain() != null) {
+                getNextTenantInitChain().handler(tenant);
+            }
         }
 
     }
