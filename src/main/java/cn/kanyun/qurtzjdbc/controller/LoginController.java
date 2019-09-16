@@ -1,5 +1,6 @@
 package cn.kanyun.qurtzjdbc.controller;
 
+import cn.kanyun.qurtzjdbc.common.SpringExpressContext;
 import cn.kanyun.qurtzjdbc.entity.UserEntity;
 import cn.kanyun.qurtzjdbc.service.UserService;
 import com.google.code.kaptcha.Constants;
@@ -17,11 +18,14 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * @author HLWK-06
+ * @author Kanyun
  */
 @Slf4j
 @Controller
@@ -48,7 +52,8 @@ public class LoginController {
 //        判断验证码
         if (request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY).equals(user.getCaptcha().toLowerCase())) {
             if (userService.login(user) != null) {
-                request.getSession().setAttribute("author", user.getUserName());
+                HttpSession session = request.getSession();
+                session.setAttribute("author", user.getUserName());
                 return "redirect:/index";
             }
         }

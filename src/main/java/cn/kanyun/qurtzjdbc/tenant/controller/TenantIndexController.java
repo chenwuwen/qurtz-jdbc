@@ -36,6 +36,8 @@ public class TenantIndexController {
     @GetMapping("/index")
     public String index(HttpServletRequest request) {
         log.debug("租户成功登陆进入租户首页");
+        String domain = (String) request.getSession().getAttribute("domain");
+        log.debug("domain:{}", domain);
 //        如果是前后端分离开发：登录成功后在这里要把用户的域名保存起来,为什么这么做呢？因为前端页面有不少Ajax请求,而这些请求的URL应该
 //        是根据租户的不同而发生变化的,虽然最终都指向了同一个服务,但是需要服务来区分租户的数据源
 //        这个前端保存域名的方式可以使用Cookie,或者后台返回json前台使用localStorage保存,然后生成新的Url,至于静态资源,css之类的,由于不走后台服务可以不用管

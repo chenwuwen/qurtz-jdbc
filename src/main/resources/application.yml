@@ -121,7 +121,7 @@ spring:
 
   #  mvc配置
   mvc:
-
+    
     view:
       prefix: /pages/
       suffix: .html
@@ -135,6 +135,10 @@ spring:
     favicon:
       #      是否显示springboot的图标(在浏览器标签页左上角)
       enabled: false
+
+  cache:
+    redis:
+      time-to-live: 100000 #毫秒
 
 
 mybatis-plus:

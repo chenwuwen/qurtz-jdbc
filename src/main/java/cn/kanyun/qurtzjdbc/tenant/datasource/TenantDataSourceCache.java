@@ -36,7 +36,7 @@ public class TenantDataSourceCache {
                 // 设置缓存的最大容量
                 .maximumSize(1000)
                 // 设置缓存在写入一分钟后失效
-                .expireAfterWrite(30, TimeUnit.SECONDS)
+                .expireAfterWrite(30, TimeUnit.MINUTES)
                 // 设置并发级别为100
                 .concurrencyLevel(100)
                 .build();

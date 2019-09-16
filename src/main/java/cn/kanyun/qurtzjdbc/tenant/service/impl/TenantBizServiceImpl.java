@@ -14,7 +14,7 @@ import java.util.List;
  * @author Kanyun
  */
 @Service
-@DynamicDataSource
+@DynamicDataSource(targetDataSourceSrc = "#header.domain")
 public class TenantBizServiceImpl extends BaseServiceImpl<Long, TenantBiz> implements TenantBizService {
     @Resource
     private TenantBizMapper tenantBizMapper;

@@ -18,7 +18,7 @@ import java.util.Optional;
  * @author Kanyun
  */
 @Service
-@DynamicDataSource
+@DynamicDataSource(targetDataSourceSrc = "#header.domain")
 public class TenantUserServiceImpl extends BaseServiceImpl<Long, TenantUser> implements TenantUserService {
     @Resource
     private TenantUserMapper tenantUserMapper;
