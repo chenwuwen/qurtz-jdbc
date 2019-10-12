@@ -7,6 +7,7 @@ buildscript {
         mavenLocal()
         mavenCentral()
         jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
         maven { url "https://repository.sonatype.org/content/groups/forge/" }
         maven { url "http://repository.jboss.org/nexus/content/groups/public/" }
         maven { url "http://maven.springframework.org/release/" }
@@ -197,85 +198,85 @@ dependencies {
 //	关于gradle中类似于maven的scope：https://blog.csdn.net/x_iya/article/details/75196149
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 //	直接使用spring-boot-parent(当使用了springboot-gradle-plugin时,springboot的版本就被插件的版本确定了,父pom也就失效了)  https://blog.csdn.net/hffyyg/article/details/86522130
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '2.1.5.RELEASE', ext: 'pom'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '2.1.5.RELEASE', ext: 'pom'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
 //    如果要将最终的打包形式改为war的话，还需要对pom.xml文件进行修改，因为spring-boot-starter-web中包含内嵌的tomcat容器，所以直接部署在外部容器会冲突报错
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', {
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', {
         exclude group: 'spring-boot-starter-tomcat'
     }
 
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
 //    Spring Mobile项目可以探测请求端的设备和系统。比如是手机、平板、还是正常的PC网站，是Spring MVC的扩展
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mobile'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mobile'
 
 //    springboot默认使用yml中的配置，但有时候要用传统的xml或properties配置，就需要使用spring-boot-configuration-processor，再在配置类开头加上@PropertySource("classpath:your.properties")，其余用法与加载yml的配置
-    compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', {
+    implementation group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', {
 //        transitive参数跟maven的optional的效果一直,都是解决依赖是否传递,https://blog.csdn.net/m0_37450089/article/details/85256596
         transitive = true
     }
 //    Tomcat对 JSP的支持
     providedRuntime group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.21'
-    compile group: 'org.springframework.boot', name: 'spring-boot-devtools'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-devtools'
 //    该依赖可实现分布式session,一旦配置完成即可像单机下使用session一样使用分布式session
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis'
-    compile("org.springframework.boot:spring-boot-devtools")
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis'
+    implementation("org.springframework.boot:spring-boot-devtools")
 
 //    swagger相关 配置
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: rootProject.dependentVersion.swaggerVersion
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: rootProject.dependentVersion.swaggerVersion
-    compile group: 'io.swagger', name: 'swagger-annotations', version: '1.5.22'
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: rootProject.dependentVersion.swaggerVersion
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: rootProject.dependentVersion.swaggerVersion
+    implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.5.22'
 
 //    验证码
-    compile group: 'com.github.penggle', name: 'kaptcha', version: '2.3.2'
+    implementation group: 'com.github.penggle', name: 'kaptcha', version: '2.3.2'
     // JWT
-    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
-    compile group: 'com.alibaba', name: 'druid', version: '1.1.17'
+    implementation group: 'com.alibaba', name: 'druid', version: '1.1.17'
 //	HSQLDB内存数据库(也可以持久化),类似于H2数据库
-    runtime group: 'org.hsqldb', name: 'hsqldb', version: '2.5.0'
-    compile group: 'com.google.guava', name: 'guava', version: '28.0-jre'
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
-    compile group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: '3.1.0'
+    runtimeOnly group: 'org.hsqldb', name: 'hsqldb', version: '2.5.0'
+    implementation group: 'com.google.guava', name: 'guava', version: '28.0-jre'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    implementation group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: '3.1.0'
 //    mybatis-plus模板代码生成器依赖
-    compile group: 'com.baomidou', name: 'mybatis-plus-generator', version: '3.2.0'
+    implementation group: 'com.baomidou', name: 'mybatis-plus-generator', version: '3.2.0'
 //    gradle5使用lombok加如下两条命令
 //	如果jar包/依赖代码 仅在编译的时候需要，但是在运行时不需要依赖,就用providedCompile
     compileOnly  group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
 //    AnnotationProcessor 就是注解编译，通过它，我们可以在编译阶段拿到注解对象（类、属性、方法等）的属性、注解值。我们常用的做法是把拿到的元素包装下，写成一个Java类。然后在业务代码里使用反射、实例化得对该java类进行操作。
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
 //	beetl模板引擎
-    compile group: 'com.ibeetl', name: 'beetl', version: '3.0.6.RELEASE'
-    compile group: 'com.alibaba', name: 'fastjson', version: '1.2.58'
-//	compile group: 'com.alibaba', name: 'druid-spring-boot-starter', version: '1.1.17'
+    implementation group: 'com.ibeetl', name: 'beetl', version: '3.0.6.RELEASE'
+    implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.58'
+//	implementation group: 'com.alibaba', name: 'druid-spring-boot-starter', version: '1.1.17'
 //	quartz引入(其依赖spring-context-support包,当使用spring-boot-starter-quartz时则不用添加该依赖,或者使用springboot2.x版本)
-    compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.1'
+    implementation group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.1'
 //    Quartz连接数据库需要连接池Quartz 2.0以前是DBCP,2.0之后是C3P0（包含2.0）所以需要添加依赖,当然也可以使用其他连接池来代替：https://www.cnblogs.com/gougouyangzi/articles/10043319.html
-    compile group: 'com.mchange', name: 'c3p0', version: '0.9.5.4'
+    implementation group: 'com.mchange', name: 'c3p0', version: '0.9.5.4'
 //	quartz-starter引入,可以在yml中设置参数,这样的话,在quartz.properties中的配置会被覆盖 ,这个starter依赖需要添加版本号,否则编译不过去,该依赖会与tomcat依赖冲突报错：ClassNotFoundException: javax.servlet.Servlet
-//	compile group: 'org.springframework.boot', name: 'spring-boot-starter-quartz' , version: '2.1.5.RELEASE'
+//	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-quartz' , version: '2.1.5.RELEASE'
 //	spring-boot-starter-web包里面有hibernate-validator包，不需要引用hibernate validator依赖
-//	compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.17.Final'
+//	implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.17.Final'
 
 //    easypoi http://easypoi.mydoc.io
 //    导入导出的工具包,可以完成Excel导出,导入,Word的导出,Excel的导出功能
-    compile group: 'cn.afterturn', name: 'easypoi-base', version: rootProject.dependentVersion.easypoiVersion
+    implementation group: 'cn.afterturn', name: 'easypoi-base', version: rootProject.dependentVersion.easypoiVersion
 //    基础注解类,解耦合 基础注解包,作用与实体对象上,拆分后方便maven多工程的依赖管理
-    compile group: 'cn.afterturn', name: 'easypoi-annotation', version: rootProject.dependentVersion.easypoiVersion
+    implementation group: 'cn.afterturn', name: 'easypoi-annotation', version: rootProject.dependentVersion.easypoiVersion
 //    耦合了spring-mvc 基于AbstractView,极大的简化spring-mvc下的导出功能,如果不使用spring mvc的便捷福利,直接引入easypoi-base 就可以了
-    compile group: 'cn.afterturn', name: 'easypoi-web', version: rootProject.dependentVersion.easypoiVersion
+    implementation group: 'cn.afterturn', name: 'easypoi-web', version: rootProject.dependentVersion.easypoiVersion
 
 //    加入GraphQL依赖
-    compile group: 'com.graphql-java', name: 'graphql-spring-boot-starter', version: '5.0.2'
+    implementation group: 'com.graphql-java', name: 'graphql-spring-boot-starter', version: '5.0.2'
 //    上面的graphql-spring-boot-starter中使用的graphql-java的版本更新比graphql-java要慢
-    compile 'com.graphql-java:graphql-java:11.0'
+    implementation 'com.graphql-java:graphql-java:11.0'
 //    GraphQL Java Tools是一个软件包，能够从GraphQL的模式定义*.graphqls文件构建出对应的Java的POJO类型对象
-    compile group: 'com.graphql-java', name: 'graphql-java-tools', version: '5.2.4'
+    implementation group: 'com.graphql-java', name: 'graphql-java-tools', version: '5.2.4'
 //    可视化调试工具（GraphQL调试客户端graphiql类似PostMan）
-    compile group: 'com.graphql-java', name: 'graphiql-spring-boot-starter', version: '4.3.0'
+    implementation group: 'com.graphql-java', name: 'graphiql-spring-boot-starter', version: '4.3.0'
     
 //    mysql连接驱动
-    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.47'
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '5.1.47'
 
 
 }

@@ -5,6 +5,7 @@ import cn.kanyun.qurtzjdbc.service.TenantService;
 import cn.kanyun.qurtzjdbc.tenant.datasource.TenantDataSourceCache;
 import cn.kanyun.qurtzjdbc.tenant.datasource.TenantDynamicRoutingDataSource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -16,12 +17,12 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Spring 启动监听,初始化 租户数据源
  * ApplicationListener 后的泛型决定了,要监听的类型,也可以自定义类继承ApplicationEvent
- *
+ * 或者使用@EventListener
  * @author Kanyun
  */
 @Slf4j
 @Component
-public class InitTenantDataSourceListener implements ApplicationListener<ContextRefreshedEvent> {
+public class InitTenantDataSourceListener extends AspectJExpressionPointcut implements ApplicationListener<ContextRefreshedEvent> {
 
     @Resource
     private TenantService tenantService;
