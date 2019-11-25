@@ -278,5 +278,14 @@ dependencies {
 //    mysql连接驱动
     implementation group: 'mysql', name: 'mysql-connector-java', version: '5.1.47'
 
+//    使用webjar来代替往项目中放入静态资源文件,可以方便控制静态资源版本
+    
+//     引入webjar后,通过/webjar/xxx/version/ 访问静态资源是需要在路径上添加版本号的,添加此依赖,不用输入版本号
+//    需要注意的是,只引入该依赖是不行的,还需要在webmvc的config文件中配置webjar的映射配置,同时设置resourceChain的属性,这样该依赖才会生效,否则还是需要在引入静态文件时指定版本号
+    implementation group: 'org.webjars', name: 'webjars-locator', version: '0.38'
+
+//    引入layui webjar 
+    implementation group: 'org.webjars', name: 'layui', version: '2.5.5'
+
 
 }

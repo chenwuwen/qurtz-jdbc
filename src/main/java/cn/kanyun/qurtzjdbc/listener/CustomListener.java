@@ -1,5 +1,7 @@
 package cn.kanyun.qurtzjdbc.listener;
 
+import cn.kanyun.qurtzjdbc.event.CustomEvent;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -13,11 +15,17 @@ import org.springframework.stereotype.Component;
  * https://www.jianshu.com/p/e2d257ce410d?from=timeline&isappinstalled=0
  *  @author Kanyun
  */
+@Slf4j
 @Component
 public class CustomListener {
 
+    /**
+     * 对于要监听事件的处理,对于多个事件的监听
+     * 可以定义多个重载的方法,只需要方法中的参数(事件类型)不同即可
+     * @param event 要监听的事件类,其需要继承ApplicationEvent
+     */
     @EventListener
-    public void exec() {
-
+    public void exec(CustomEvent event) {
+        log.info(event.getName());
     }
 }

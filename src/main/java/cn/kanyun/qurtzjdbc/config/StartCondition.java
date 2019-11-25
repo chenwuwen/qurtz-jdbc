@@ -6,6 +6,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 
 /**
  * 条件类，判断启动环境
+ * @author Kanyun
  */
 public class StartCondition implements Condition {
     @Override

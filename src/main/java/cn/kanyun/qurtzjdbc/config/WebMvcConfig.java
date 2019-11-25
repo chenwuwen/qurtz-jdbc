@@ -71,15 +71,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     }
 
+    /**
+     * 拦截器配置
+     * @param registry
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         //需要配置2：----------- 告知拦截器：/static/admin/** 与 /static/user/** 不需要拦截 （配置的是 路径）
         registry.addInterceptor(new BaseInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns("/assets/**");
+                .excludePathPatterns("/assets/**")
+                .excludePathPatterns("/webjars/**");
     }
 
     /**
-     * 静态资源处理
+     * 静态资源处理【静态资源映射】
      * <p>
      * 添加处理程序以服务静态资源，如图像、JS和CSS
      * 来自Web应用程序根目录下特定位置的文件，以及其他。
@@ -89,11 +94,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 //        第一个方法设置访问路径前缀，第二个方法设置资源路径
-//        swagger静态资源
+//        swagger静态资源映射
         registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-//        webjars
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-//        graphql客户端graphiql的静态资源
+//        webjars 静态资源映射(新增 resourceChain 配置即开启缓存配置,不加这个配置,添加了webjars-locator依赖也不会生效)
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/")
+//              生产时建议开启缓存（只是缓存了资源路径而不是资源内容）,开发是可以设置为false,但必须设置resourceChain,否则不生效
+                .resourceChain(false);
+//        graphql测试客户端graphiql的静态资源映射
         registry.addResourceHandler("/vendor/**").addResourceLocations("classpath:/static/vendor/");
 
 //        本应用(由于使用了gradle的sourceSets所以在打包时会把webapp下的静态页打包到压缩包中)
@@ -170,7 +178,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 SerializerFeature.WriteNullStringAsEmpty
         );
         fastConverter.setFastJsonConfig(fastJsonConfig);
-        //将fastjson添加到视图消息转换器列表内
+        //将fastJson添加到视图消息转换器列表内
         converters.add(fastConverter);
 
     }

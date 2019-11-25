@@ -10,7 +10,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <link rel="stylesheet" href="${ctxPath}/assets/layui/css/layui.css" media="all">
+<!--    <link rel="stylesheet" href="${ctxPath}/assets/layui/css/layui.css" media="all">-->
+    <link rel="stylesheet" href="/webjars/layui/css/layui.css" media="all">
 
     <style>
         html, body {
@@ -154,7 +155,9 @@
     </div>
 </div>
 <script src="${ctxPath}/assets/js/jquery.min.js" charset="utf-8"></script>
-<script src="${ctxPath}/assets/layui/layui.js" charset="utf-8"></script>
+<!--使用webjar代替传统的静态资源文件使用方式(传统使用方式是讲静态资源文件放到webapp目录下,或者resource/static下),而使用webjar只需要依赖一个jar包即可完成,便于静态资源文件的管理-->
+<!--<script src="${ctxPath}/assets/layui/layui.js" charset="utf-8"></script>-->
+<script src="/webjars/layui/layui.js" charset="utf-8"></script>
 <script src="${ctxPath}/assets/js/jquery.particleground.min.js" charset="utf-8"></script>
 <script>
     layui.use(['form'], function () {
