@@ -46,7 +46,7 @@ public class TenantObserver implements Observer {
     public void update(Observable o, Object arg) {
         if (o instanceof TenantHandler) {
             log.debug("观察到Tenant发生变化");
-            Tenant tenant = ((TenantHandler) o).getTenant();
+            Tenant tenant = (Tenant) arg;
             log.debug("发生变化的数据：{}", tenant.toString());
             UpdateDynamicDataSourceChain updateDynamicDataSourceChain = new UpdateDynamicDataSourceChain(null);
             BuildAppChain buildAppChain = new BuildAppChain(updateDynamicDataSourceChain);

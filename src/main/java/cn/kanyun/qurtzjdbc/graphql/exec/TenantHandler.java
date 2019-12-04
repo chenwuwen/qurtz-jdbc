@@ -23,16 +23,6 @@ public class TenantHandler extends Observable implements GraphQLMutationResolver
     @Resource
     private TenantService tenantService;
 
-    private Tenant tenant;
-
-    public Tenant getTenant() {
-        return tenant;
-    }
-
-    public void setTenant(Tenant tenant) {
-        this.tenant = tenant;
-    }
-
     /**
      * 创建一个Tenant
      *
@@ -43,7 +33,6 @@ public class TenantHandler extends Observable implements GraphQLMutationResolver
 //        insert默认返回的是影响数据库表的行数，通过对象可以获得Id
         int rowCount = tenantService.insert(tenant);
         if (rowCount > 0) {
-            setTenant(tenant);
 //        被观察者数据发生改变
             this.sendMessage(tenant);
         }
@@ -58,7 +47,7 @@ public class TenantHandler extends Observable implements GraphQLMutationResolver
      */
     private void sendMessage(Tenant tenant) {
         super.setChanged();
-        super.notifyObservers();
+        super.notifyObservers(tenant);
     }
 
     /**
