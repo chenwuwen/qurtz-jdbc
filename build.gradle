@@ -202,9 +202,11 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
 //    如果要将最终的打包形式改为war的话，还需要对pom.xml文件进行修改，因为spring-boot-starter-web中包含内嵌的tomcat容器，所以直接部署在外部容器会冲突报错
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', {
-        exclude group: 'spring-boot-starter-tomcat'
-    }
+//    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', {
+//        exclude group: 'spring-boot-starter-tomcat'
+//    }
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux'
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
 //    Spring Mobile项目可以探测请求端的设备和系统。比如是手机、平板、还是正常的PC网站，是Spring MVC的扩展
@@ -222,10 +224,13 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis'
     implementation("org.springframework.boot:spring-boot-devtools")
 
-//    swagger相关 配置
-    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: rootProject.dependentVersion.swaggerVersion
+//    swagger相关 配置 (这里UI界面不使用springfox-swagger-ui而使用swagger-ui-layer,这样的话,访问swagger的URL会变成/docs.html,而不是原来的swagger-ui.html)
+//    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: rootProject.dependentVersion.swaggerVersion
+    implementation group: 'com.github.caspar-chen', name: 'swagger-ui-layer', version: '1.1.3'
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: rootProject.dependentVersion.swaggerVersion
     implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.5.22'
+//    swagger可能会用到的依赖
+//    implementation group: 'com.fasterxml', name: 'classmate', version: '1.4.0'
 
 //    验证码
     implementation group: 'com.github.penggle', name: 'kaptcha', version: '2.3.2'

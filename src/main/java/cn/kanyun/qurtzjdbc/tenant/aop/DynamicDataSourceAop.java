@@ -38,7 +38,7 @@ public class DynamicDataSourceAop {
     /**
      * 执行方法前更换数据源
      * @param joinPoint         切点
-     * @param DynamicDataSource 注解类
+     * @param dynamicDataSource 注解类
      */
     @Before("pointCut()&&@within(dynamicDataSource)")
     public void doBefore(JoinPoint joinPoint, DynamicDataSource dynamicDataSource) {
@@ -61,7 +61,7 @@ public class DynamicDataSourceAop {
 //            同时该token也作为session(第三方的session如redis)的key,可以保存用户的信息,同时信息中可以保存域名,跟上述一样了,只不过,这个token的职责就更多了
             if (targetDataSourceSrc.startsWith("#header")) {
                 String key = targetDataSourceSrc.substring(8);
-                domain = (String) servletRequest.getHeader(key);
+                domain = servletRequest.getHeader(key);
             }
         }
         DynamicDatasourceHolder.set(domain);
@@ -75,7 +75,7 @@ public class DynamicDataSourceAop {
      */
     @After("pointCut()")
     public void doAfter(JoinPoint joinPoint) {
-//        DynamicDatasourceHolder.remove();
+        DynamicDatasourceHolder.remove();
     }
 
 }

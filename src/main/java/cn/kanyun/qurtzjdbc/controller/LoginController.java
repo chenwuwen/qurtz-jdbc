@@ -1,10 +1,11 @@
 package cn.kanyun.qurtzjdbc.controller;
 
-import cn.kanyun.qurtzjdbc.common.SpringExpressContext;
 import cn.kanyun.qurtzjdbc.entity.UserEntity;
 import cn.kanyun.qurtzjdbc.service.UserService;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,12 +22,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Kanyun
  */
+@Api(tags = "用户模块")
 @Slf4j
 @Controller
 public class LoginController {
@@ -46,6 +46,7 @@ public class LoginController {
         return "login";
     }
 
+    @ApiOperation(value = "/login", notes = "用户登录", httpMethod = "POST", response = String.class)
     @PostMapping("/login")
     public String login(UserEntity user, HttpServletRequest request) {
         log.debug("用户登录");

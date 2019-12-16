@@ -4,6 +4,10 @@ import cn.kanyun.qurtzjdbc.tenant.entity.TenantUser;
 import cn.kanyun.qurtzjdbc.tenant.service.TenantUserService;
 import cn.kanyun.qurtzjdbc.util.JwtUtil;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.redis.cache.RedisCacheManager;
@@ -22,6 +26,7 @@ import java.util.Optional;
  *
  * @author Kanyun
  */
+@Api(value = "/api/tenant", tags = "租户接口")
 @Slf4j
 @Controller
 @RequestMapping("/api/tenant")
@@ -38,6 +43,7 @@ public class TenantLoginController {
      *
      * @return
      */
+    @ApiOperation(value = "/", notes = "租户登录页面",httpMethod = "GET")
     @GetMapping(value = {"", "login", "/"})
     public String login() {
         return "tenant/login";
@@ -49,6 +55,10 @@ public class TenantLoginController {
      * @param tenantUser
      * @return
      */
+    @ApiOperation(value = "/login", notes = "租户登录接口", httpMethod = "POST", response = String.class)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "tenantUser", value = "租户用户实体", dataType = "TenantUser", paramType = "body", required = true)
+    })
     @PostMapping("/login")
     public String login(TenantUser tenantUser, HttpServletRequest request) {
         Optional<TenantUser> optionalTenantUser = tenantUserService.login(tenantUser);
@@ -67,6 +77,10 @@ public class TenantLoginController {
      * @param tenantUser
      * @return
      */
+    @ApiOperation(value = "/mobile/login", notes = "移动端租户登录接口", httpMethod = "POST", response = String.class)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "tenantUser", value = "租户用户实体", dataType = "TenantUser", paramType = "body", required = true)
+    })
     @PostMapping("/mobile/login")
     @ResponseBody
     public Map mobileLogin(@RequestBody TenantUser tenantUser) {
@@ -77,7 +91,7 @@ public class TenantLoginController {
         Optional<TenantUser> optionalTenantUser = tenantUserService.login(tenantUser);
         if (optionalTenantUser.isPresent()) {
             map.put("code", 0);
-        }else {
+        } else {
             map.put("code", 1);
 
         }

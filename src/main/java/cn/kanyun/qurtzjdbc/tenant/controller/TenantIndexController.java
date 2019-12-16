@@ -2,7 +2,10 @@ package cn.kanyun.qurtzjdbc.tenant.controller;
 
 import cn.kanyun.qurtzjdbc.tenant.entity.TenantBiz;
 import cn.kanyun.qurtzjdbc.tenant.service.TenantBizService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +22,7 @@ import java.util.Map;
  *
  * @author Kanyun
  */
+@Api(value = "/api/tenant", tags = "租户接口")
 @Slf4j
 @Controller
 @RequestMapping("/api/tenant")
@@ -55,6 +59,7 @@ public class TenantIndexController {
      *
      * @return
      */
+    @ApiOperation(value = "/getBizList", notes = "获取租户业务列表", httpMethod = "GET", response = Map.class)
     @GetMapping("/getBizList")
     @ResponseBody
     public Map getBizList(HttpServletRequest request) {
