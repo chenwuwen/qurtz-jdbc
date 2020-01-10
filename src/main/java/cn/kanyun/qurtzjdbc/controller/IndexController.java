@@ -26,9 +26,10 @@ public class IndexController {
     public String index(Model model, HttpServletRequest request) {
 //        request.getSession().setAttribute("author", "看雲");
         log.debug("[{}]访问首页", LocalDateTime.now());
-        if (request.getSession().getAttribute("author") == null) {
-            return "redirect:login";
-        }
+//        if (request.getSession().getAttribute("author") == null) {
+//            return "redirect:login";
+//        }
+        request.setAttribute("content","你已成功进入首页");
         return "index";
     }
 
@@ -37,7 +38,7 @@ public class IndexController {
      * @param request
      * @return
      * @ResponseStatus注解可以标注请求处理方法。使用此注解，可以指定响应所需要的HTTP STATUS。
-     * 特别地，我们可以使用HttpStauts类对该注解的value属性进行赋值
+     * 特别地，我们可以使用HttpStatus类对该注解的value属性进行赋值
      */
     @GetMapping("/error")
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -11,7 +11,6 @@ import java.util.Date;
 @Data
 public class JobEntity {
 
-    private Integer id;
     /**
      * 任务名
      */

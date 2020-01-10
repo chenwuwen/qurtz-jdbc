@@ -33,20 +33,17 @@ public class FileController {
     @PostMapping("/upload")
     @ResponseBody
     public Result upload(@Param("file") MultipartFile file) {
-        Result result = new Result();
         if (file.isEmpty()) {
-            result.setMsg("上传失败，请选择文件");
-            return result;
+            return Result.errorHandler("上传失败，请选择文件");
         }
         String fileName = file.getOriginalFilename();
         File dest = new File(Constant.uploadFilePath + fileName);
         try {
             file.transferTo(dest);
-            result.setMsg("上传成功");
-            return result;
+            return Result.successHandler();
         } catch (IOException e) {
             e.printStackTrace();
+            return Result.errorHandler(e.getMessage());
         }
-        return null;
     }
 }

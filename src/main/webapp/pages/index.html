@@ -1,12 +1,20 @@
-
 <%
-layout("layout/layout.html"){
+layout("/layout/layout.html"){
 %>
 
 <div class="layui-body">
-        <!-- 内容主体区域 -->
-        <div style="padding: 15px;">内容主体区域</div>
+        <div style="padding: 15px;">${content}</div>
+        <a onclick="alert('哈哈哈')" >哈哈</a>
+        <a onclick="f()" >ff</a>
 </div>
 
+<script>
+        function f() {
+                layui.use('layer', function(){
+                        var layer = layui.layer;
 
+                        layer.msg('hello');
+                });
+        }
+</script>
 <% } %>

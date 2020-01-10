@@ -195,6 +195,9 @@ dependencyManagement {
 }
 
 dependencies {
+//    这个依赖的是项目Libs目录下的tool.jar,这个jar包是从${JAVA_HOME}处复制过来的,我使用的JDK版本为1.8,这个jar包是实现运行时编译的关键
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
 //	关于gradle中类似于maven的scope：https://blog.csdn.net/x_iya/article/details/75196149
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 //	直接使用spring-boot-parent(当使用了springboot-gradle-plugin时,springboot的版本就被插件的版本确定了,父pom也就失效了)  https://blog.csdn.net/hffyyg/article/details/86522130
@@ -224,13 +227,15 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis'
     implementation("org.springframework.boot:spring-boot-devtools")
 
-//    swagger相关 配置 (这里UI界面不使用springfox-swagger-ui而使用swagger-ui-layer,这样的话,访问swagger的URL会变成/docs.html,而不是原来的swagger-ui.html)
+
+    //    swagger相关 配置 (这里UI界面不使用springfox-swagger-ui而使用swagger-ui-layer,这样的话,访问swagger的URL会变成/docs.html,而不是原来的swagger-ui.html)
 //    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: rootProject.dependentVersion.swaggerVersion
-    implementation group: 'com.github.caspar-chen', name: 'swagger-ui-layer', version: '1.1.3'
+//    implementation group: 'com.github.caspar-chen', name: 'swagger-ui-layer', version: '1.1.3'
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: rootProject.dependentVersion.swaggerVersion
     implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.5.22'
 //    swagger可能会用到的依赖
 //    implementation group: 'com.fasterxml', name: 'classmate', version: '1.4.0'
+
 
 //    验证码
     implementation group: 'com.github.penggle', name: 'kaptcha', version: '2.3.2'
@@ -289,8 +294,11 @@ dependencies {
 //    需要注意的是,只引入该依赖是不行的,还需要在webmvc的config文件中配置webjar的映射配置,同时设置resourceChain的属性,这样该依赖才会生效,否则还是需要在引入静态文件时指定版本号
     implementation group: 'org.webjars', name: 'webjars-locator', version: '0.38'
 
-//    引入layui webjar 
+//    引入layui webjar
     implementation group: 'org.webjars', name: 'layui', version: '2.5.5'
+
+    // 文件解压缩 https://github.com/zeroturnaround/zt-zip
+    implementation group: 'org.zeroturnaround', name: 'zt-zip', version: '1.13'
 
 
 }

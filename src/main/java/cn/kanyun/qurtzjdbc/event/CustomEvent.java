@@ -1,5 +1,6 @@
 package cn.kanyun.qurtzjdbc.event;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.context.ApplicationEvent;
 
@@ -9,7 +10,6 @@ import org.springframework.context.ApplicationEvent;
  * 如：applicationContext.publishEvent(new CustomEvent(this,"CustomEvent事件"));
  * @author Kanyun
  */
-@Data
 public class CustomEvent extends ApplicationEvent {
 
     private String name;
@@ -21,6 +21,14 @@ public class CustomEvent extends ApplicationEvent {
      */
     public CustomEvent(Object source,String name) {
         super(source);
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
 }

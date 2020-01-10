@@ -44,7 +44,7 @@ public class JavaFileUtil {
      * 否则在使用的时候会报错:ClassNotFoundException 异常,因为默认类加载器是ApplicationClassLoad
      * 如果需要确实需要将生成的.class文件放到其他位置,并且之后要使用它,那么需要自定义类加载器,并加载它
      */
-    private static String classFileOutputPath = JavaFileUtil.class.getResource("/").getPath()+File.separator;
+    private static String classFileOutputPath = JavaFileUtil.class.getResource("/").getPath() + File.separator;
 
 //    对于不在classPath位置的.class文件(包括数据库,网络等等),需要自定义类加载器加载,所以.class文件生成目录需要额外注意
 //    private static String classFileOutputPath = System.getProperty("user.dir");
@@ -95,7 +95,8 @@ public class JavaFileUtil {
 
     /**
      * 检测是否是Java文件
-     *
+     * 如果是java文件,会进行编译,并且将编译后的.class文件保存到项目的classpath目录下
+     * 如果java文件的文件名,与类名不一致,会编译不通过
      * @param sourceFileInputPath
      * @return
      * @throws FileNotFoundException
@@ -143,7 +144,7 @@ public class JavaFileUtil {
             // 输出诊断信息 Diagnostic - 表示一个诊断信息
             for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticListeners.getDiagnostics()) {
                 // 可以在此处自定义编译诊断信息(错误)的输出格式
-               log.debug("Error on line {} in {}", diagnostic.getLineNumber(),
+                log.debug("Error on line {} in {}", diagnostic.getLineNumber(),
                         diagnostic.getSource().toUri());
             }
 
@@ -162,8 +163,7 @@ public class JavaFileUtil {
     /**
      * 获取类的全名称
      *
-     * @param sourceCode
-     *            源码
+     * @param sourceCode 源码
      * @return 类的全名称
      */
     public static String getFullClassName(String sourceCode) {
@@ -198,13 +198,13 @@ public class JavaFileUtil {
         log.debug(JavaFileUtil.class.getResource("/").getPath());
         log.debug(Thread.currentThread().getContextClassLoader().getResource("").getPath());
 
-        String path = System.getProperty("user.dir") + File.separator+ "TestCompile"+ ".java";
-        log.debug("待编译的java文件的路径是：{}",path);
-        log.debug("编译结果：{}",isJavaFile(path));
-        log.debug("编译后的.class文件的路径是：{}",classFileOutputPath);
+        String path = System.getProperty("user.dir") + File.separator + "TestCompile" + ".java";
+        log.debug("待编译的java文件的路径是：{}", path);
+        log.debug("编译结果：{}", isJavaFile(path));
+        log.debug("编译后的.class文件的路径是：{}", classFileOutputPath);
         try {
 //            自定义类加载器实例化时传入编译生成.class文件后的路径
-            CustomClassLoad classLoad = new CustomClassLoad(classFileOutputPath );
+            CustomClassLoad classLoad = new CustomClassLoad(classFileOutputPath);
 
             // Class.forName有一个三个参数的重载方法，可以指定类加载器，平时我们使用的Class.forName("XX.XX.XXX")都是使用的系统类加载器Application
 //            传入类的全限定名
@@ -217,8 +217,8 @@ public class JavaFileUtil {
             Method method = clazz.getMethod("main", String[].class);
 
             // 构造main方法所需参数
-            Object[] pars = new Object[] { 1 };
-            pars[0] = new String[] {};
+            Object[] pars = new Object[]{1};
+            pars[0] = new String[]{};
 
             // 执行类的静态方法可以不需要获取实例
             // method.invoke(null, pars);

@@ -1,8 +1,19 @@
 package cn.kanyun.qurtzjdbc.listener;
 
+import cn.kanyun.qurtzjdbc.entity.JobEntity;
+import cn.kanyun.qurtzjdbc.jobs.JobDemo;
+import cn.kanyun.qurtzjdbc.quartz.QuartzService;
+import lombok.extern.slf4j.Slf4j;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.impl.StdSchedulerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * SpringBoot中CommandLineRunner的作用
@@ -11,14 +22,32 @@ import org.springframework.stereotype.Component;
  * 如果需要按照一定的顺序去执行，那么就需要在实体类上使用一个@Order注解（或者实现Order接口）来表明顺序
  * 在整个应用生命周期内只会执行一次。
  * https://www.cnblogs.com/chenpi/p/9696310.html
+ *
  * @author Kanyun
  * @date 2019/6/17
  */
 @Component
 @Order(value = 10)
+@Slf4j
 public class ScheduleJobInitListener implements CommandLineRunner {
+
+    /**
+     * 注入Quartz Service
+     */
+    @Resource
+    private QuartzService quartzService;
+
     @Override
     public void run(String... strings) throws Exception {
-
+        log.info("======= 系统启动时,插入一条Job Demo ========");
+        JobEntity jobEntity = new JobEntity();
+        jobEntity.setJobName("JobDemo 测试");
+        jobEntity.setCronExpression("0/10 * * * * ?");
+        jobEntity.setJobClassName("cn.kanyun.qurtzjdbc.jobs.JobDemo");
+        jobEntity.setJobGroupName("Demo");
+//        插入新任务
+        quartzService.addJob(jobEntity);
+//        立即运行任务
+        quartzService.runJobNow(jobEntity);
     }
 }

@@ -1,0 +1,167 @@
+<link rel="stylesheet" href="${ctxPath}/webjars/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="${ctxPath}/assets/css/task.css" media="all">
+<script src="${ctxPath}/webjars/layui/layui.js"></script>
+<script src="${ctxPath}/assets/js/axios.min.js"></script>
+<script src="${ctxPath}/assets/js/jquery.min.js"></script>
+<script src="${ctxPath}/assets/js/qs.js"></script>
+<form class="layui-form" id="add_task_from" method="post" action="${ctxPath}/task/add" enctype="multipart/form-data">
+    <div class="layui-form-item">
+        <label class="layui-form-label">任务名</label>
+        <div class="layui-input-block">
+            <input type="text" name="jobName" lay-verify="title" autocomplete="off" placeholder="请输入任务名"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">任务组名</label>
+        <div class="layui-input-block">
+            <input type="text" name="jobGroupName" lay-verify="required" lay-reqtext="任务组名是必填项，岂能为空？" placeholder="请输入"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">Job类全限定名</label>
+        <div class="layui-input-block">
+            <input type="text" name="jobClassName" lay-verify="required" lay-reqtext="Job类全限定名是必填项，岂能为空？"
+                   placeholder="请输入" value="cn.kanyun.qurtzjdbc.jobs.TestAddJob" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">Cron表达式</label>
+        <div class="layui-input-block">
+            <input type="text" name="cronExpression" lay-verify="required" lay-reqtext="Cron表达式是必填项，岂能为空？"
+                   placeholder="请输入" value="0/10 * * * * ?" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">java文件</label>
+        <button class="layui-btn test" type="button" id="javaFile">
+            <i class="layui-icon">&#xe67c;</i>上传文件
+        </button>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" id="commitTaskBtn" lay-submit="" lay-filter="taskForm">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script type="application/javascript">
+    // 定义一个变量,在上传文件之前把文件对象赋值到该变量,然后表单就可以使用这个变量得到文件对象了,最后使用FormData添加这个文件对象,和表单的其他对象一块提交到后台
+    var java_file;
+
+    // 这个上传文件的操作会先于表单提交,但是我想的是这个提交放到跟表单在一块提交
+    layui.use('upload', function () {
+        var upload = layui.upload;
+        upload.render({
+            elem: '#javaFile',
+            url: '', //服务端上传接口
+            drag: true,//是否接受拖拽的文件上传，设置 false 可禁用。不支持ie8/9
+            accept: 'file', //指定允许上传时校验的文件类型，可选值有：images（图片）、file（所有文件）、video（视频）、audio（音频）
+            // acceptMime: 'image/*', //规定打开文件选择框时，筛选出的文件类型，值为用逗号隔开的 MIME 类型列表
+            exts: 'java', //允许上传的文件后缀。一般结合 accept 参数类设定
+            auto: false, //是否选完文件后自动上传。如果设定 false，那么需要设置 bindAction 参数来指向一个其它按钮提交上传
+            bindAction: '#commitTaskBtn',
+            field: 'jobFile',  //设定文件域的字段名,后台接收的名称
+            before: function (obj) {
+                // 在上传前,将obj赋值给变量java_file,在formdata.append()时append java_file这个变量
+                java_file = obj;
+                return false
+            },
+            done: function (res, index, upload) {
+                //获取当前触发上传的元素，一般用于 elem 绑定 class 的情况，注意：此乃 layui 2.1.0 新增
+                var item = this.item;
+                console.log('addTask.html upload的触发元素');
+            },
+            error: function (index, upload) {
+                //请求异常回调,由于未指定上传URL(要和表单一块提交),因此提交地址是当前地址,所以肯定会报错,所以此处什么都不做
+                console.log("由于需要文件与表单一块提交,因此未定义单独的文件上传地址,所以默认调用一次当前页面的URL,此时页面会弹出错误弹窗,因此打印这句话,来覆盖掉默认的错误弹窗")
+            }
+        })
+    })
+
+    var axios_config = {
+        headers: {
+            'Content-Type': 'multipart/form-data;charset=UTF-8',
+            // 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        },
+        withCredentials: true
+        // transformRequest: function (trans_data) {  //transformRequest允许在向服务器发送数据前修改数据,仅适用于非GET请求
+        //     // 对 data 进行任意转换处理
+        //     console.log('axios 中的transformRequest中的值：' + trans_data);
+        //     return trans_data;
+        // },
+        // headers: {
+        //     'Content-Type': 'multipart/form-data;charset=UTF-8',
+        // }
+    }
+
+
+    layui.use('form', function () {
+        let form = layui.form;
+        form.on('submit(taskForm)', function (data) {
+            console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+            console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+            console.log(typeof data.field);
+
+
+            let normalFormData = new FormData();
+            normalFormData.append('jobName', data.field['jobName'])
+            normalFormData.append('jobGroupName', data.field['jobGroupName'])
+            normalFormData.append('jobClassName', data.field['jobClassName'])
+            normalFormData.append('cronExpression', data.field['cronExpression'])
+            // 这里不能直接append,如果直接append,那么jobFile对应的就是字符串了,正常应该是对应的 (binary) 对象
+            // normalFormData.append('jobFile', data.field['jobFile'])
+
+            // 由于不能直接append data.field['jobFile'],因此首先定义变量java_file,在上传操作触发前,将file赋值给java_file,再进行上传
+            normalFormData.append('jobFile', java_file)
+
+
+            //将form的DOM对象当作FormData的构造函数
+            // 在这里需要使用layui的data.form,而不能直接用jQuery去取,否则下面的构造方法会报错,因为在这里使用jQuery去取会取出来两个元素,其中第一个才是HTMLFormElement类型的对象
+            console.log("使用构造函数,在layui中使用jquery那种取dom的方式,来利用FormData的构造方法会报错");
+            let constructFormData = new FormData(data.form)
+
+            axios.post("${ctxPath}/task/add",
+                constructFormData
+                , axios_config
+            ).then(function (response) {
+                console.log(response);
+                let ret = response.data
+                console.log("表单请求成功,返回的状态码是200")
+                if (ret.code == 1001) {
+                    layer.msg("任务添加成功")
+                    closeFrameBySelfNormal()
+                } else {
+                    layer.alert('添加任务失败:' + response.data.msg + "!", {icon: 5})
+                }
+            }).catch(function (err) {
+                layer.alert('提交新任务失败！', {icon: 5})
+            })
+
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    })
+
+    /**
+     * layui iframe自关闭
+     */
+    function closeFrameBySelf() {
+        let index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    }
+
+    /**
+     * 通用的iframe自关闭,利用Window.postMessage()，进行iframe和父辈通信
+     * 使用该方法,需要在父类定义监听器
+     */
+    function closeFrameBySelfNormal() {
+        let close_cmd = "iframe自关闭";
+        console.log("window.location.origin的值：" + window.location.origin);
+        parent.postMessage(close_cmd, window.location.origin)
+    }
+</script>

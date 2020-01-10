@@ -8,9 +8,9 @@
     <link rel="stylesheet" type="text/css" href="${ctxPath}/assets/tenant/login/css/demo.css" />
     <!--必要样式-->
     <link rel="stylesheet" type="text/css" href="${ctxPath}/assets/tenant/login/css/component.css" />
-    <link rel="stylesheet" type="text/css" href="/webjars/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/webjars/layui/css/layui.css" />
     <script type="text/javascript" src="${ctxPath}/assets/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/webjars/layui/layui.js"></script>
+    <script type="text/javascript" src="${ctxPath}/webjars/layui/layui.js"></script>
 </head>
 <body>
 <div class="container demo-1">
@@ -19,7 +19,7 @@
             <canvas id="demo-canvas"></canvas>
             <div class="logo_box">
                 <h3>欢迎你</h3>
-                <form id="loginForm" action="/api/tenant/login" name="f" method="post" >
+                <form id="loginForm" action="${ctxPath}/api/tenant/login" name="f" method="post" >
                     <div class="input_outer">
                         <span class="u_user"></span>
                         <input name="userName" class="text" style="color: #FFFFFF !important" type="text" placeholder="请输入账户">
