@@ -1,5 +1,7 @@
 package cn.kanyun.qurtzjdbc.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -12,6 +14,7 @@ import java.io.Serializable;
 /**
  * 使用MybatisPlus
  * 实体类中添加@TableName、@TableId
+ *
  * @author KANYUN
  */
 @Data
@@ -25,18 +28,54 @@ public class UserEntity implements Serializable {
      */
     @TableId(value = "ID", type = IdType.AUTO)
     private Long id;
+
+    /**
+     * 用户名
+     */
     @TableField(value = "USER_NAME")
     private String userName;
+
+    /**
+     * 密码
+     */
     @TableField(value = "PASSWORD")
     private String password;
+
+    /**
+     * 年龄
+     */
     @TableField(value = "AGE")
     private Integer age;
+
+    /**
+     * 区域
+     */
     @TableField(value = "AREA")
     private String area;
+
+    /**
+     * 电话
+     */
     @TableField(value = "PHONE")
     private Long phone;
-    @TableField(value = "REGISTER_DATE",fill = FieldFill.INSERT_UPDATE)
+
+    /**
+     * 状态 枚举类型
+     * {@link cn.kanyun.qurtzjdbc.entity.UserStatus}
+     */
+    @JSONField(serialzeFeatures = SerializerFeature.WriteEnumUsingToString)
+    @TableField(value = "STATUS")
+    private UserStatus status;
+
+    /**
+     * 注册日期 时间戳
+     */
+    @TableField(value = "REGISTER_DATE", fill = FieldFill.INSERT_UPDATE)
     private Long registerDate;
+
+    /**
+     * 注册IP long类型
+     */
     @TableField(value = "REGISTER_IP")
     private Long registerIp;
 

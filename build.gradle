@@ -222,10 +222,9 @@ dependencies {
     }
 //    Tomcat对 JSP的支持
     providedRuntime group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.21'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-devtools'
+//    implementation group: 'org.springframework.boot', name: 'spring-boot-devtools'
 //    该依赖可实现分布式session,一旦配置完成即可像单机下使用session一样使用分布式session
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis'
-    implementation("org.springframework.boot:spring-boot-devtools")
 
 
     //    swagger相关 配置 (这里UI界面不使用springfox-swagger-ui而使用swagger-ui-layer,这样的话,访问swagger的URL会变成/docs.html,而不是原来的swagger-ui.html)

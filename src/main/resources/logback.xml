@@ -26,6 +26,9 @@
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>DEBUG</level>
         </filter>
+        <filter class="cn.kanyun.qurtzjdbc.filter.WebLogFilter">
+<!--            <level>DEBUG</level>-->
+        </filter>
         <encoder>
             <!-- 按照上面配置的LOG_PATTERN来打印日志 -->
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>

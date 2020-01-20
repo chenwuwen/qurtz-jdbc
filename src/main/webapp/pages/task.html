@@ -11,7 +11,7 @@ layout("/layout/layout.html"){
             <button class="layui-btn layui-btn-sm" onclick="downloadTaskTemplate()">
                 <i class="layui-icon">&#xe601;</i>下载任务模板
             </button>
-            <button class="layui-btn layui-btn-sm" id="dependentFile" onclick="uploadTaskDependent()">
+            <button class="layui-btn layui-btn-sm" id="dependentFile" >
                 <i class="layui-icon">&#xe67c;</i>上传任务依赖
             </button>
         </div>
@@ -125,7 +125,7 @@ layout("/layout/layout.html"){
             headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'}
         }).then(function (response) {
             console.log(response);
-            if (response.data.code == 1001) {
+            if (response.data.code === 1001) {
                 layer.msg('任务已暂停！');
                 $(element).text(response.data.data)
             } else {
@@ -149,11 +149,14 @@ layout("/layout/layout.html"){
             headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'}
         }).then(function (response) {
             console.log(response);
-            if (response.data.code == 1001) {
+            if (response.data.code === 1001) {
                 layer.msg('任务已开始！');
-                console.log($(element).parent().parent())
-                console.log($(element).parent().parent().before())
-                $(element).parent().parent().before().before().text(response.data.data)
+                // tr
+                console.log($(element).parent().parent().parent()[0])
+                // td非自身
+                console.log($(element).parent().parent().before()[0])
+                console.log($(element).parent().parent().parent().eq(4)[0])
+                // $(element).parent().parent().before().before()[0].text(response.data.data)
             } else {
                 layer.alert('操作失败！', {icon: 5})
             }
@@ -180,33 +183,39 @@ layout("/layout/layout.html"){
         return Qs.stringify(param)
     }
 
+    layui.use('upload', function () {
+       var upload = layui.upload;
+
+    upload.render({
+        elem: '#dependentFile',
+        url: '${ctxPath}/file/upload/dependent', //服务端上传接口
+        drag: true,//是否接受拖拽的文件上传，设置 false 可禁用。不支持ie8/9
+        accept: 'file', //指定允许上传时校验的文件类型，可选值有：images（图片）、file（所有文件）、video（视频）、audio（音频）
+        // acceptMime: 'image/*', //规定打开文件选择框时，筛选出的文件类型，值为用逗号隔开的 MIME 类型列表
+        auto: true, //是否选完文件后自动上传。如果设定 false，那么需要设置 bindAction 参数来指向一个其它按钮提交上传
+        field: 'dependentFile',  //设定文件域的字段名,后台接收的名称
+        before: function (obj) {
+            console.log("上传开始前回调")
+        },
+        done: function (res, index, upload) {
+            //获取当前触发上传的元素，一般用于 elem 绑定 class 的情况，注意：此乃 layui 2.1.0 新增
+            var item = this.item;
+            console.log('上传完后回调');
+            if (res.data.code === 1001) {
+                layer.msg(res.data.data)
+            }else {
+                layer.alert(res.data.data, {icon: 5})
+            }
+        },
+        error: function (index, upload) {
+        }
+    })
+    })
     /**
      * 上传任务依赖
      */
     function uploadTaskDependent() {
-        upload.render({
-            elem: '#dependentFile',
-            url: '', //服务端上传接口
-            drag: true,//是否接受拖拽的文件上传，设置 false 可禁用。不支持ie8/9
-            accept: 'file', //指定允许上传时校验的文件类型，可选值有：images（图片）、file（所有文件）、video（视频）、audio（音频）
-            // acceptMime: 'image/*', //规定打开文件选择框时，筛选出的文件类型，值为用逗号隔开的 MIME 类型列表
-            auto: false, //是否选完文件后自动上传。如果设定 false，那么需要设置 bindAction 参数来指向一个其它按钮提交上传
-            field: 'jobFile',  //设定文件域的字段名,后台接收的名称
-            before: function (obj) {
-                // 在上传前,将obj赋值给变量java_file,在formdata.append()时append java_file这个变量
-                java_file = obj;
-                return false
-            },
-            done: function (res, index, upload) {
-                //获取当前触发上传的元素，一般用于 elem 绑定 class 的情况，注意：此乃 layui 2.1.0 新增
-                var item = this.item;
-                console.log('addTask.html upload的触发元素');
-            },
-            error: function (index, upload) {
-                //请求异常回调,由于未指定上传URL(要和表单一块提交),因此提交地址是当前地址,所以肯定会报错,所以此处什么都不做
-                console.log("由于需要文件与表单一块提交,因此未定义单独的文件上传地址,所以默认调用一次当前页面的URL,此时页面会弹出错误弹窗,因此打印这句话,来覆盖掉默认的错误弹窗")
-            }
-        })
+
     }
 
     /**

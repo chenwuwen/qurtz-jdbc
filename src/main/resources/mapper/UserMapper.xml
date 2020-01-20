@@ -9,6 +9,7 @@
         <result column="AGE" jdbcType="INTEGER" property="age"/>
         <result column="AREA" jdbcType="VARCHAR" property="area"/>
         <result column="PHONE" jdbcType="BIGINT" property="phone"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
         <result column="REGISTER_DATE" jdbcType="BIGINT" property="registerDate"/>
         <result column="REGISTER_IP" jdbcType="BIGINT" property="registerIp"/>
     </resultMap>

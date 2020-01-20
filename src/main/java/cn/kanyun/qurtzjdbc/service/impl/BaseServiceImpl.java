@@ -28,6 +28,8 @@ public abstract class BaseServiceImpl<K extends Serializable,T extends Serializa
 //        之前的EntityWrapper被改成了其他的，比如你查询的时候，就是QueryWrapper
         Wrapper queryWrapper = new QueryWrapper<T>().lambda();
         IPage<T> result = baseMapper.selectPage(page, queryWrapper);
+        Integer count = baseMapper.selectCount(queryWrapper);
+        result.setTotal(count);
         return result;
     }
 

@@ -11,22 +11,27 @@ import java.io.Serializable;
  */
 @Data
 @AllArgsConstructor
-public class Result implements Serializable {
+public class Result<T> implements Serializable {
     private String msg;
     private Integer code;
     private Object data;
+    private Integer count;
 
 
     public static Result successHandler() {
-        return new Result("处理成功", CodeEnum.HANDLER_SUCCESS.getCode(), null);
+        return new Result("处理成功", CodeEnum.HANDLER_SUCCESS.getCode(), null, 0);
     }
 
     public static Result successHandler(Object o) {
-        return new Result("处理成功", CodeEnum.HANDLER_SUCCESS.getCode(), o);
+        return new Result("处理成功", CodeEnum.HANDLER_SUCCESS.getCode(), o, 0);
+    }
+
+    public static Result successHandler(Object o, Integer count) {
+        return new Result("处理成功", CodeEnum.HANDLER_SUCCESS.getCode(), o, count);
     }
 
 
     public static Result errorHandler(String msg) {
-        return new Result(msg, CodeEnum.HANDLER_ERROR.getCode(), null);
+        return new Result(msg, CodeEnum.HANDLER_ERROR.getCode(), null, 0);
     }
 }

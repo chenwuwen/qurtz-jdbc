@@ -13,19 +13,54 @@
     <script src="${ctxPath}/assets/js/jquery.min.js"></script>
     <script src="${ctxPath}/assets/js/axios.min.js"></script>
     <script src="${ctxPath}/assets/js/qs.js"></script>
+    <script src="${ctxPath}/assets/js/utils.js"></script>
+
+    <script>
+        //JavaScript代码区域
+
+        // 定义layer全局变量
+        var element
+        var layer;
+        var table;
+        var form;
+        var upload;
+
+        layui.use('element', function () {
+            element = layui.element;
+
+        });
+
+        // 实例化layer,实例化后子页面可以直接使用layer
+        layui.use('layer', function () {
+            layer = layui.layer;
+        });
+
+        layui.use('table', function () {
+            table = layui.table;
+        });
+
+        layui.use('form', function () {
+            form = layui.form;
+        })
+
+        layui.use('upload', function () {
+            upload = layui.upload;
+        })
+
+    </script>
 
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
 
     <!--    顶栏-->
-    <div class="layui-header">
-        <div class="layui-logo">layui 后台布局</div>
+    <div class="layui-header mean">
+        <div class="layui-logo">看云</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href="${ctxPath}/">控制台</a></li>
-            <li class="layui-nav-item"><a href="${ctxPath}/task">任务管理</a></li>
-            <li class="layui-nav-item"><a href="">用户</a></li>
+            <li class="layui-nav-item"><a href="${ctxPath}/" >控制台</a></li>
+            <li class="layui-nav-item"><a href="${ctxPath}/task" >任务管理</a></li>
+            <li class="layui-nav-item"><a href="${ctxPath}/user">用户管理</a></li>
             <li class="layui-nav-item">
                 <a href="javascript:;">其它系统</a>
                 <dl class="layui-nav-child">
@@ -51,7 +86,7 @@
     </div>
 
     <!--    侧边栏 -->
-    <div class="layui-side layui-bg-black">
+    <div class="layui-side layui-bg-black mean">
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
@@ -69,9 +104,15 @@
         </div>
     </div>
 
-    <!--${layoutContent}是固定表达式,表示主体区域-->
-    ${layoutContent}
-
+<!--    选项卡-->
+<!--    <div class="layui-tab-content">-->
+<!--        <div class="layui-tab-item layui-show">-->
+<!--            <iframe id="iframeMain" name="main_frame" src="" style="width: 100%" ; height="100%" ;>-->
+                <!--${layoutContent}是固定表达式,表示主体区域-->
+                ${layoutContent}
+<!--            </iframe>-->
+<!--        </div>-->
+<!--    </div>-->
 
     <!--include标签,需要注意添加引号-->
     <% include("/layout/_footer.html"){} %>
@@ -79,39 +120,6 @@
 </div>
 
 
-<script>
-    //JavaScript代码区域
-
-    // 定义layer全局变量
-    var element
-    var layer;
-    var table;
-    var form;
-    var upload;
-
-    layui.use('element', function () {
-        element = layui.element;
-
-    });
-
-    // 实例化layer,实例化后子页面可以直接使用layer
-    layui.use('layer', function () {
-        layer = layui.layer;
-    });
-
-    layui.use('table', function () {
-        table = layui.table;
-    });
-
-    layui.use('form', function () {
-        form = layui.form;
-    })
-
-    layui.use('upload', function () {
-        upload = layui.upload;
-    })
-
-</script>
-
 </body>
+
 </html>
