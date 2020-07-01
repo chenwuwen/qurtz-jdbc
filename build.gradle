@@ -17,7 +17,7 @@ buildscript {
 //		Spring Boot Gradle 插件对Gradle项目提供了Spring Boot支持，实现了将项目打包成可执行jar或war文件，运行Spring Boot应用程序和使用spring-boot-dependencies提供的依赖管理功能。该插件要求使用Gradle 4.10或以上版本
 //      同时该插件提供了一个bootRun的任务,可以通过gradlew bootRun 来启动项目,同时该Plugin也决定了项目中使用的springboot的版本,不需要再使用 springboot的父pom了
 //        https://docs.spring.io/spring-boot/docs/2.1.6.BUILD-SNAPSHOT/gradle-plugin/reference/html/
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.6.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.8.RELEASE'
     }
 }
 
@@ -128,7 +128,7 @@ project.afterEvaluate {
 }
 
 project.beforeEvaluate {
-    println "this.project.afterEvaluate111"
+    println "this.project.beforeEvaluate"
 }
 
 /**

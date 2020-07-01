@@ -3,8 +3,6 @@ package cn.kanyun.qurtzjdbc.common;
 import cn.kanyun.qurtzjdbc.entity.LoggerMessage;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.ObjectStreamException;
-import java.io.Serializable;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -17,7 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * https://blog.csdn.net/kanyun123/article/details/104047715
  */
 @Slf4j
-public enum LoggerQueue implements Serializable {
+public enum LoggerQueue {
 
 
     INSTANCE;
